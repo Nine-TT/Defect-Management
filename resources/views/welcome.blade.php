@@ -44,9 +44,11 @@
                         <div class="min-h-screen bg-gray-100"></div>
                     </div>
                 </main>
-                <footer class="border-t bg-gray-100 p-4 pb-3 text-xs">
-                    2022 © Design & Develop by Farnous.
-                </footer>
+
+                <!-- footer -->
+                @include('footer')
+                <!-- end -->
+
             </div>
 
         </div>
