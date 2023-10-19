@@ -12,9 +12,10 @@ class CreateProjectsTable extends Migration
             $table->string('projectName');
             $table->unsignedBigInteger('projectCreator');
             $table->text('description')->nullable();
+            $table->boolean('isOpen');
             $table->timestamps();
-
             $table->foreign('projectCreator')->references('userID')->on('users');
+            
         });
     }
 
