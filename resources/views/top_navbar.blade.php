@@ -121,9 +121,15 @@
                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                  role="menuitem" tabindex="-1" id="user-menu-item-1">Projects</a>
 
-                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                 role="menuitem" tabindex="-1" id="user-menu-item-1">Sign
-                                 out</a>
+                             <form method="POST" action="{{ route('logout') }}">
+                                 @csrf
+
+                                 <x-dropdown-link :href="route('logout')"
+                                                  onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                     {{ __('Log Out') }}
+                                 </x-dropdown-link>
+                             </form>
                          </div>
                      </div>
 
@@ -159,7 +165,7 @@
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95"
          @click.away="mobilemenue = false
-                
+
                 ">
          <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
              <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
