@@ -12,6 +12,29 @@ class ProjectControllers extends Controller
         return view('projects.create');
     }
 
+    public function index()
+    {
+        $userID = 1;
+        // Xử lý logic để lấy danh sách dự án từ cơ sở dữ liệu
+        $projects =
+            Project::where('projectCreator', $userID)->get();
+
+        return view('project', ['projects' => $projects]);
+    }
+
+    public function show($id)
+    {
+        // Lấy dự án dựa trên ID
+        $project = Project::find($id);
+
+        // Kiểm tra xem dự án có tồn tại hay không
+        if (!$project) {
+            // Xử lý khi không tìm thấy dự án
+            return redirect()->route('projects.index')->with('error', 'Dự án không tồn tại');
+        }
+
+        return view('project-detail', ['project' => $project]);
+    }
     public function store(Request $request)
     {
         // Xác thực và xử lý dữ liệu từ form
@@ -22,9 +45,9 @@ class ProjectControllers extends Controller
 
         // Lưu dữ liệu vào cơ sở dữ liệu
         $project = new Project;
-        $project->project_name = $request->input('project_name');
+        $project->projectName = $request->input('project_name');
         $project->description = $request->input('description');
-        $project->user_id = $request->input('user_id'); // Bạn cũng có thể lấy user_id từ session hoặc Auth::user()
+        $project->projectCreator = $request->input('user_id'); // Bạn cũng có thể lấy user_id từ session hoặc Auth::user()
 
         $project->save();
 
