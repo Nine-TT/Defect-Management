@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectControllers extends Controller
 {
@@ -35,6 +36,24 @@ class ProjectControllers extends Controller
 
         return view('project-detail', ['project' => $project]);
     }
+
+    public function destroy($id)
+    {
+        // Find the project by ID
+        $project = Project::find($id);
+
+        if (!$project) {
+            return redirect()->route('projects.index')->with('error', 'Project not found');
+        }
+
+        // Kiểm tra xem người dùng đã đăng nhập có quyền xóa dự án (bạn có thể thực hiện logic kiểm tra quyền của riêng bạn ở đây)
+
+        // Delete the project
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('success', 'Project has been deleted');
+    }
+
     public function store(Request $request)
     {
         // Xác thực và xử lý dữ liệu từ form
@@ -44,10 +63,12 @@ class ProjectControllers extends Controller
         ]);
 
         // Lưu dữ liệu vào cơ sở dữ liệu
+        $user = Auth::user();
         $project = new Project;
         $project->projectName = $request->input('project_name');
         $project->description = $request->input('description');
-        $project->projectCreator = $request->input('user_id'); // Bạn cũng có thể lấy user_id từ session hoặc Auth::user()
+        $project->projectCreator = $user->userID; // Bạn cũng có thể lấy user_id từ session hoặc Auth::user()
+        $project->isOpen = true;
 
         $project->save();
 

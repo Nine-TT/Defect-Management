@@ -79,11 +79,20 @@
                                                         d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                                                 </svg>
                                             </label>
-                                            <ul tabindex="0"
-                                                class="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow">
-                                                <li><a>Xem chi tiết</a></li>
-                                                <li><a>Xóa dự án</a></li>
-                                            </ul>
+                                            <div class="dropdown dropdown-left">
+                                                <ul tabindex="0 "
+                                                    class="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow">
+                                                    <li><a>Xem chi tiết</a></li>
+                                                    <li>
+                                                        <form method="POST"
+                                                            action="{{ route('projects.destroy', ['id' => $project->projectID]) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"><a>Xóa dự án</a></button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                     <p class="whitespace-wrap h-[150px] overflow-y-clip text-justify">
@@ -95,10 +104,34 @@
                         @endforeach
                     </div>
                 @else
-                    <p>Hiện chưa có dự án nào.</p>
+                    <p class="m-4">Hiện chưa có dự án nào!</p>
                 @endif
             </div>
 
         </div>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('error'))
+                Toastify({
+                    text: '{{ session('error') }}',
+                    duration: 5000, // Thời gian hiển thị (ms)
+                    gravity: 'top', // Vị trí hiển thị (top, bottom, left, right)
+                    position: 'center', // Vị trí tương đối (center, left, right)
+                    backgroundColor: 'red', // Màu nền
+                    stopOnFocus: true, // Dừng hiển thị khi người dùng tập trung vào cửa sổ
+                }).showToast();
+            @elseif (session('success'))
+                Toastify({
+                    text: '{{ session('success') }}',
+                    duration: 5000, // Thời gian hiển thị (ms)
+                    gravity: 'top', // Vị trí hiển thị (top, bottom, left, right)
+                    position: 'center', // Vị trí tương đối (center, left, right)
+                    backgroundColor: 'green', // Màu nền
+                    stopOnFocus: true, // Dừng hiển thị khi người dùng tập trung vào cửa sổ
+                }).showToast();
+            @endif
+        });
+    </script>
 @endsection
