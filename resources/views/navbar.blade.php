@@ -1,3 +1,8 @@
+ @php
+     $currentRoute = Route::currentRouteName();
+ @endphp
+
+
  <!-- sidebar -->
  <div class="sidebar fixed inset-y-0 left-0 top-0 z-50 h-screen max-h-screen w-64 transform bg-gray-800 text-blue-100 transition duration-200 ease-in-out"
      x-data="{ open: true }" x-on:togglesidebar.window=" open = !open" x-show="true"
@@ -27,9 +32,8 @@
 
              <!-- ITEM -->
              <li class="text-sm text-gray-500">
-                 <a href="#"
-                     class="relative flex w-full items-center rounded px-2 py-1 hover:bg-gray-700 hover:text-white"
-                     x-on:click.prevent="selected = 'Dashboard'">
+                 <a href="{{ route('home') }}"
+                     class="{{ $currentRoute === 'home' ? 'bg-white text-black' : '' }} relative flex w-full items-center rounded px-2 py-1 hover:bg-gray-700 hover:text-white">
                      <div class="pr-2">
                          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -122,8 +126,8 @@
 
              <!-- List ITEM -->
              <li class="text-sm text-gray-500">
-                 <a href="#" x-on:click.prevent="selected = (selected === 'Projects' ? '':'Projects')"
-                     class="hover.bg-gray-700 hover.text-white relative flex w-full items-center rounded px-2 py-1">
+                 <a href="{{ url('/projects') }}"
+                     class="{{ $currentRoute === 'projects.index' ? 'bg-white text-black' : '' }} hover.bg-gray-700 hover.text-white relative flex w-full items-center rounded px-2 py-1">
                      <div class="pr-2">
                          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -131,16 +135,16 @@
                          </svg>
                      </div>
                      <div>Projects</div>
-                     <div class="absolute right-1.5 transition-transform duration-300"
+                     {{-- <div class="absolute right-1.5 transition-transform duration-300"
                          :class="{ 'rotate-180': (selected === 'Projects') }">
                          <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                  d="M19 9l-7 7-7-7" />
                          </svg>
-                     </div>
+                     </div> --}}
                  </a>
 
-                 <div class="translate max-h-0 transform overflow-hidden pl-4 pr-2 transition-all duration-300"
+                 {{-- <div class="translate max-h-0 transform overflow-hidden pl-4 pr-2 transition-all duration-300"
                      :style="(selected === 'Projects') ? 'max-height: ' + $el.scrollHeight + 'px': ''">
                      <ul class="mt-2 flex flex-col space-y-1 border-l border-gray-700 pl-2 text-xs text-gray-500">
                          <!-- Item -->
@@ -158,7 +162,7 @@
                              </a>
                          </li>
                      </ul>
-                 </div>
+                 </div> --}}
              </li>
 
              <!-- List ITEM -->

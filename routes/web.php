@@ -2,21 +2,26 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\ProjectControllers;
+use App\Http\Controllers\project\ProjectMemberController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
+
+//------------ project route -----------
+Route::get('/projects', function () {
+    return view('project');
+})->name('projects');
+Route::get('/projects', [ProjectControllers::class, 'index'])->name('projects.index');
+Route::post('/projects', [ProjectControllers::class, 'store'])->name('projects.store');
+Route::get('/projects/{id}', [ProjectControllers::class, 'show'])->name('projects.show');
+Route::delete('/projects/{id}', [ProjectControllers::class, 'destroy'])->name('projects.destroy');
+
+// add member
+Route::post('/handle-add-user', [ProjectMemberController::class, 'handleAddMemberToProject'])->name('handle-add-user.handleAddMemberToProject');
+
+// -------------------------------------
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,8 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
 
-//Route::get('/login', function () {
-//    return view('login');
-//});
+
+require  'auth.php';
