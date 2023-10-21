@@ -19,7 +19,9 @@ class ProjectControllers extends Controller
 
     public function index()
     {
-        $userID = Auth::user()->userID;
+
+        $user = Auth::user();
+        $userID = $user->userID;
 
         // Lấy danh sách các dự án mà người dùng là thành viên
         $projectIDs = ProjectMember::where('userID', $userID)->pluck('projectID');
@@ -27,11 +29,12 @@ class ProjectControllers extends Controller
         // Lấy tất cả các dự án có projectID nằm trong danh sách $projectIDs
         $projects = Project::whereIn('projectID', $projectIDs)->get();
 
-        return view('project', ['projects' => $projects]);
+        return view('project', ['projects' => $projects, 'user' => $user]);
     }
 
     public function show($id)
     {
+        $user = Auth::user();
         // Lấy dự án dựa trên ID
         $project = Project::find($id);
 
@@ -41,7 +44,7 @@ class ProjectControllers extends Controller
             return redirect()->route('projects.index')->with('error', 'Dự án không tồn tại');
         }
 
-        return view('project-detail', ['project' => $project]);
+        return view('project-detail', ['project' => $project, 'user' =>  $user]);
     }
 
     public function destroy($id)

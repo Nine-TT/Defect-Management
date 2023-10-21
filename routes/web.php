@@ -1,18 +1,15 @@
 <?php
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\project\ProjectControllers;
 use App\Http\Controllers\project\ProjectMemberController;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
+
 
 //------------ project route -----------
-// Route::get('/projects', function () {
-//     return view('project');
-// })->name('projects');
 Route::get('/projects', [ProjectControllers::class, 'index'])->name('projects.index');
 Route::post('/projects', [ProjectControllers::class, 'store'])->name('projects.store');
 Route::get('/projects/{id}', [ProjectControllers::class, 'show'])->name('projects.show');

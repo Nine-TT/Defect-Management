@@ -13,6 +13,7 @@ class ProjectMemberController extends Controller
     public function handleAddMemberToProject(Request $request)
     {
 
+        $user = Auth::user();
         $userID = Auth::user()->userID;
 
         // Lấy địa chỉ email và vai trò từ dữ liệu gửi lên
@@ -57,6 +58,6 @@ class ProjectMemberController extends Controller
 
         $projectMember->save();
 
-        return redirect()->route('projects.show', ['id' => $projectID])->with('success', 'Thêm thành viên thành công!');
+        return redirect()->route('projects.show', ['id' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
     }
 }
