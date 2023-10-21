@@ -15,8 +15,7 @@ class ProjectControllers extends Controller
 
     public function index()
     {
-        $userID = 1;
-        // Xử lý logic để lấy danh sách dự án từ cơ sở dữ liệu
+        $userID = Auth::user()->userID;
         $projects =
             Project::where('projectCreator', $userID)->get();
 

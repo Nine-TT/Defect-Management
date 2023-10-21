@@ -101,8 +101,7 @@
                              </div>
 
                              <div class="ml-4 flex flex-col">
-                                 <span>Fares Arnous</span>
-                                 <span>Admin</span>
+                                 <span>{{ $user->lastName." ".$user->firstName}}</span>
                              </div>
                          </div>
 
