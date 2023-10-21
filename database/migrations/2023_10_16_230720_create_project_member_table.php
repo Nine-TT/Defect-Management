@@ -9,7 +9,7 @@ class CreateProjectMemberTable extends Migration
     public function up()
     {
         Schema::create('projectMembers', function (Blueprint $table) {
-            $table->unsignedBigInteger('memberID')->primary();
+            $table->id();
             $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('projectID');
             $table->string('role');
