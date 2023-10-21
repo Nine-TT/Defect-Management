@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectControllers;
 use App\Http\Controllers\project\ProjectMemberController;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
+
 
 //------------ project route -----------
 Route::get('/projects', function () {
