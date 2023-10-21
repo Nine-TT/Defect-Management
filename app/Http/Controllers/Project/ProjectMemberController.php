@@ -6,15 +6,31 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProjectMember;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectMemberController extends Controller
 {
     public function handleAddMemberToProject(Request $request)
     {
+
+        $user = Auth::user();
+        $userID = Auth::user()->userID;
+
         // Lấy địa chỉ email và vai trò từ dữ liệu gửi lên
         $user_email = $request->input('user_email');
         $role = $request->input('role');
         $projectID = $request->input('projectID');
+
+        $isAdminInProject = ProjectMember::where('userID', $userID)
+            ->where('projectID', $projectID)
+            ->where('role', 'Admin')
+            ->exists();
+
+        if (!$isAdminInProject) {
+            // Xử lý khi người dùng hiện tại không có vai trò "Admin" trong dự án
+            return redirect()->back()->with('error', 'Bạn không có quyền thêm thành viên vào dự án này!');
+        }
+
 
         // Tìm người dùng dựa trên địa chỉ email
         $user = User::where('email', $user_email)->first();
@@ -42,6 +58,6 @@ class ProjectMemberController extends Controller
 
         $projectMember->save();
 
-        return redirect()->route('projects.show', ['id' => $projectID])->with('success', 'Thêm thành viên thành công!');
+        return redirect()->route('projects.show', ['id' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
     }
 }
