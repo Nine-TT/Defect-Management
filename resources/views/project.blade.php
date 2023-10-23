@@ -38,7 +38,7 @@
 
                         <div class="group relative z-0 mb-6 w-full">
                             <textarea name="description" id="description"
-                                class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                class="peer block h-28 w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
                                 placeholder=" " required></textarea>
                             <label for="description"
                                 class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">Mô
@@ -63,26 +63,32 @@
             {{-- List du an --}}
 
             <div>
-                @if (count($projects) > 0)
+                @if (count($projectData) > 0)
                     <div class="flex flex-wrap">
-                        @foreach ($projects as $project)
+                        @foreach ($projectData as $projectItem)
+                            @php
+                                $project = $projectItem['project'];
+                                $usersCount = $projectItem['usersCount'];
+                                $isOpen = $projectItem['isOpen'];
+                                $role = $projectItem['userRole'];
+                            @endphp
                             <div class="card m-4 w-96 bg-base-100 shadow-xl">
-                                {{-- <a href="#"> --}}
-                                <div class="card-body p-3">
+                                <div class="card-body p-5">
                                     <div class="flex items-center justify-between">
                                         <h2 class="card-title">{{ $project->projectName }}</h2>
-                                        <div class="dropdown m-1">
-                                            <label tabindex="0" class="">
+                                        <div class="dropdown">
+                                            <label tabindex="0" class="hover:cursor-pointer">
                                                 <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                     fill="currentColor" viewBox="0 0 16 3">
                                                     <path
                                                         d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                                                 </svg>
                                             </label>
-                                            <div class="dropdown dropdown-left">
-                                                <ul tabindex="0 "
-                                                    class="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow">
-                                                    <li><a>Xem chi tiết</a></li>
+                                            <div class="dropdown-left dropdown">
+                                                <ul tabindex="0 mt-0 "
+                                                    class="menu dropdown-content rounded-box z-[1] w-52 border border-gray-500 bg-base-100 shadow">
+                                                    <li><a href="{{ route('projects.show', ['id' => $project->projectID]) }}"
+                                                            class="">Xem chi tiết</a></li>
                                                     <li>
                                                         <form method="POST"
                                                             action="{{ route('projects.destroy', ['id' => $project->projectID]) }}">
@@ -95,11 +101,24 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="whitespace-wrap h-[150px] overflow-y-clip text-justify">
+                                    <p class="whitespace-wrap h-[150px] overflow-y-clip border-b border-t p-1 text-justify">
                                         {{ $project->description }}</p>
-                                    <a href="{{ route('projects.show', ['id' => $project->projectID]) }}">Xem chi tiết</a>
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <i class="fa-solid fa-user-tie"></i>
+                                            <span>{{ $role }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fa-solid fa-users"></i>
+                                            <span>{{ $usersCount }}</span>
+                                        </div>
+
+                                        <div>
+                                            <i class="fa-solid fa-clipboard-check"></i>
+                                            <span>{{ $isOpen ? 'Open' : 'Done' }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                {{-- </a> --}}
                             </div>
                         @endforeach
                     </div>
@@ -107,6 +126,7 @@
                     <p class="m-4">Hiện chưa có dự án nào!</p>
                 @endif
             </div>
+
 
         </div>
     </main>
