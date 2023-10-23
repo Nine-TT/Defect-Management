@@ -58,7 +58,7 @@ class ProjectMemberController extends Controller
         $projectMember->userID = $user->userID;
         $projectMember->role = $role;
         $projectMember->projectID = $projectID;
-//        $projectMember->save();
+        $projectMember->save();
 
 
         $project = Project::find($projectID);
