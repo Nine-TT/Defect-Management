@@ -114,21 +114,17 @@
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95" role="menu"
                              aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                 role="menuitem" tabindex="-1" id="user-menu-item-0">My Profile</a>
-
-                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                 role="menuitem" tabindex="-1" id="user-menu-item-1">Projects</a>
+                             <a href="profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                 role="menuitem" tabindex="-1" id="user-menu-item-0">Thông tin cá nhân</a>
 
                              <form method="POST" action="{{ route('logout') }}">
                                  @csrf
+                                 <a href="#" :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    role="menuitem" tabindex="-1" id="user-menu-item-1">Đăng xuất</a>
+                             </form
 
-                                 <x-dropdown-link :href="route('logout')"
-                                                  onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                     {{ __('Log Out') }}
-                                 </x-dropdown-link>
-                             </form>
                          </div>
                      </div>
 
