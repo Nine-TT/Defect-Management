@@ -14,8 +14,9 @@ Route::get('/projects', [ProjectControllers::class, 'index'])->name('projects.in
 Route::post('/projects', [ProjectControllers::class, 'store'])->name('projects.store');
 Route::get('/projects/{id}', [ProjectControllers::class, 'show'])->name('projects.show');
 Route::delete('/projects/{id}', [ProjectControllers::class, 'destroy'])->name('projects.destroy');
+Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'managementUserInProject'])->name('projects.member');
 
-// add member
+// add member to project 
 Route::post('/handle-add-user', [ProjectMemberController::class, 'handleAddMemberToProject'])->name('handle-add-user.handleAddMemberToProject');
 
 // -------------------------------------

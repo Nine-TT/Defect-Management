@@ -75,7 +75,7 @@
                             <div class="card m-4 w-96 bg-base-100 shadow-xl">
                                 <div class="card-body p-5">
                                     <div class="flex items-center justify-between">
-                                        <h2 class="card-title">{{ $project->projectName }}</h2>
+                                        <h2 class="card-title pr-1">{{ $project->projectName }}</h2>
                                         <div class="dropdown">
                                             <label tabindex="0" class="hover:cursor-pointer">
                                                 <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -84,9 +84,9 @@
                                                         d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                                                 </svg>
                                             </label>
-                                            <div class="dropdown-left dropdown">
-                                                <ul tabindex="0 mt-0 "
-                                                    class="menu dropdown-content rounded-box z-[1] w-52 border border-gray-500 bg-base-100 shadow">
+                                            <div class="dropdown-left dropdown mb-5">
+                                                <ul tabindex="0"
+                                                    class="menu dropdown-content rounded-box z-[1] ml-2 w-52 border border-gray-500 bg-base-100 shadow">
                                                     <li><a href="{{ route('projects.show', ['id' => $project->projectID]) }}"
                                                             class="">Xem chi tiết</a></li>
                                                     <li>

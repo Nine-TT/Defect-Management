@@ -60,7 +60,6 @@ class ProjectControllers extends Controller
 
     public function show($id)
     {
-        $user = Auth::user();
         // Lấy dự án dựa trên ID
         $project = Project::find($id);
 
@@ -70,7 +69,21 @@ class ProjectControllers extends Controller
             return redirect()->route('projects.index')->with('error', 'Dự án không tồn tại');
         }
 
-        return view('project-detail', ['project' => $project, 'user' =>  $user]);
+        // Lấy thông tin từ bảng projectMember
+        $projectMembers = ProjectMember::where('projectID', $id)->get();
+
+        // Tạo một mảng để lưu trữ thông tin người dùng
+        $listUser = [];
+
+        // Lấy thông tin từ bảng user cho từng user_id trong danh sách
+        foreach ($projectMembers as $projectMember) {
+            $userIDs = User::find($projectMember->userID);
+            $listUser[] = $userIDs;
+        }
+
+        $user = Auth::user();
+
+        return view('project-detail', ['project' => $project, 'listUser' => $listUser, 'user' =>  $user]);
     }
 
     public function destroy($id)

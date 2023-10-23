@@ -60,4 +60,31 @@ class ProjectMemberController extends Controller
 
         return redirect()->route('projects.show', ['id' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
     }
+
+    public function managementUserInProject($projectID)
+    {
+        // Lấy thông tin từ bảng projectMember
+        $projectMembers = ProjectMember::where('projectID', $projectID)->get();
+
+        // Tạo một mảng để lưu trữ thông tin người dùng và vai trò
+        $listUserWithRole = [];
+
+        // Lặp qua danh sách projectMembers để lấy vai trò của từng người dùng
+        foreach ($projectMembers as $projectMember) {
+            $user = User::find($projectMember->userID);
+
+            // Lấy vai trò từ trường role trong bảng ProjectMember
+            $role = $projectMember->role;
+
+            // Thêm thông tin người dùng và vai trò vào mảng
+            $listUserWithRole[] = [
+                'user' => $user,
+                'role' => $role,
+            ];
+        }
+
+        $user = Auth::user();
+
+        return view('projects/project_management_user', ['listUser' => $listUserWithRole, 'projectID' => $projectID, 'user' => $user]);
+    }
 }
