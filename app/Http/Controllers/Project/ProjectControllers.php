@@ -8,6 +8,7 @@ use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProjectMember;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 
 class ProjectControllers extends Controller
@@ -19,7 +20,6 @@ class ProjectControllers extends Controller
 
     public function index()
     {
-
         $user = Auth::user();
         $userID = $user->userID;
 
@@ -29,8 +29,34 @@ class ProjectControllers extends Controller
         // Lấy tất cả các dự án có projectID nằm trong danh sách $projectIDs
         $projects = Project::whereIn('projectID', $projectIDs)->get();
 
-        return view('project', ['projects' => $projects, 'user' => $user]);
+        // Tạo một mảng để lưu thông tin dự án, tổng số người dùng và người dùng có vai trò 'Admin' trong từng dự án
+        $projectData = [];
+
+        foreach ($projects as $project) {
+            // Đếm số người dùng tham gia dự án
+            $usersCount = ProjectMember::where('projectID', $project->projectID)->count();
+
+            // Lấy vai trò của người dùng đang đăng nhập trong dự án
+            $userRole = ProjectMember::where('projectID', $project->projectID)
+                ->where('userID', $userID)
+                ->value('role');
+            // Lấy giá trị của trường isOpen từ dự án
+            $isOpen = $project->isOpen;
+
+            // Lưu thông tin dự án, tổng số người dùng và người dùng 'Admin' vào mảng
+            $projectData[] = [
+                'project' => $project,
+                'usersCount' => $usersCount,
+                'userRole' => $userRole,
+                'isOpen' => $isOpen,
+            ];
+        }
+
+        return view('project', ['projectData' => $projectData, 'user' => $user]);
     }
+
+
+
 
     public function show($id)
     {
@@ -57,9 +83,9 @@ class ProjectControllers extends Controller
             return redirect()->route('projects.index')->with('error', 'Project not found');
         }
 
-        $userID = $user->id;
+        $userID = $user->userID;
         // Lấy thông tin vai trò của người dùng trong dự án
-        $userRole = ProjectMember::where('projectID', $project->projectID)
+        $userRole = ProjectMember::where('projectID', $id)
             ->where('userID', $userID)
             ->value('role');
 
