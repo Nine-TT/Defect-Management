@@ -41,7 +41,7 @@
                                 <span class="label-text">Vai trò</span>
                             </label>
                             <select name="role" class="select select-bordered">
-                                <option disabled selected>Viewer</option>
+                                <option selected>Viewer</option>
                                 <option>Admin</option>
                                 <option>Developer</option>
                                 <option>Tester</option>
@@ -57,7 +57,7 @@
             </dialog>
 
             <!-- lsit user -->
-            <div class="avatar-group ml-3 h-10 -space-x-6">
+            <div class="avatar-group ml-3 h-10 -space-x-6 hidden">
                 <div class="avatar">
                     <div class="w-10">
                         <img
