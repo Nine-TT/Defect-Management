@@ -6,7 +6,7 @@
             Project
             <span class="mt-2 block text-xs font-normal text-gray-300">
                 <a href="/">Home</a> &raquo;
-                <a href="#">Projects</a> &raquo;
+                <a href="#">Projects</a>
             </span>
         </div>
         <div>
@@ -87,11 +87,11 @@
                                             <div class="dropdown-left dropdown mb-5">
                                                 <ul tabindex="0"
                                                     class="menu dropdown-content rounded-box z-[1] ml-2 w-52 border border-gray-500 bg-base-100 shadow">
-                                                    <li><a href="{{ route('projects.show', ['id' => $project->projectID]) }}"
+                                                    <li><a href="{{ route('projects.show', ['projectID' => $project->projectID]) }}"
                                                             class="">Xem chi tiết</a></li>
                                                     <li>
                                                         <form method="POST"
-                                                            action="{{ route('projects.destroy', ['id' => $project->projectID]) }}">
+                                                            action="{{ route('projects.destroy', ['projectID' => $project->projectID]) }}">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"><a>Xóa dự án</a></button>
