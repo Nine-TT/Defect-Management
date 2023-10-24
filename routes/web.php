@@ -19,14 +19,11 @@ Route::middleware('auth')->group(function () {
 
 
     Route::middleware('checkProjectMembership')->group(function () {
-        Route::get('/projects/{id}', [ProjectControllers::class, 'show'])->name('projects.show');
-        Route::delete('/projects/{id}', [ProjectControllers::class, 'destroy'])->name('projects.destroy');
+        Route::get('/projects/{projectID}', [ProjectControllers::class, 'show'])->name('projects.show');
+        Route::delete('/projects/{projectID}', [ProjectControllers::class, 'destroy'])->name('projects.destroy');
+        Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'managementUserInProject'])->name('projects.member');
     });
-
-
-}
-
-);
+});
 
 
 Route::get('/dashboard', function () {
