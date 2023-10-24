@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\project;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendMail;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProjectMember;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectMemberController extends Controller
 {
@@ -55,8 +58,20 @@ class ProjectMemberController extends Controller
         $projectMember->userID = $user->userID;
         $projectMember->role = $role;
         $projectMember->projectID = $projectID;
-
         $projectMember->save();
+
+
+        $project = Project::find($projectID);
+        $inviter = Auth::user();
+        $content = [
+            "projectName"=>"$project->projectName"
+            ,"inviter"=>$inviter->lastName." ".$inviter->firstName
+            ,"role"=> $role
+            ,"projectID"=> $projectID];
+
+        $mail = new SendMail($user, 'project-invitation', $content);
+        Mail::send($mail);
+
 
         return redirect()->route('projects.show', ['id' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
     }

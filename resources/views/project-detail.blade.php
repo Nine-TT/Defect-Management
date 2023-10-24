@@ -59,24 +59,148 @@
             </div>
 
             <!-- lsit user -->
-
-
-            <div class="ml-4 flex -space-x-4">
-                @foreach ($listUser as $key => $users)
-                    @if ($key < 3)
-                        @if ($users->urlImage != null)
-                            <img class="h-10 w-10 rounded-full border-2 border-white dark:border-gray-800"
-                                src="{{ $users->urlImage }}" alt="">
-                        @else
-                            <a class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-center text-xs font-medium text-white hover:bg-gray-600 dark:border-gray-800"
-                                href="#">{{ substr(trim($users->firstName), 0, 1) }}</a>
-                        @endif
-                    @endif
-                @endforeach
-
-                <a class="hover-bg-gray-600 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-gray-700 text-xs font-medium text-white dark:border-gray-800"
-                    href="{{ route('projects.member', ['projectID' => $project->projectID]) }}"><i
-                        class="fa-solid fa-ellipsis"></i></a>
+            <div class="avatar-group ml-3 h-10 -space-x-6">
+                <div class="avatar">
+                    <div class="w-10">
+                        <img
+                            src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/355911512_1499391710869593_8577894831743026955_n.jpg?stp=c62.0.240.240a_dst-jpg_p240x240&_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=6oh5vk9CFXEAX92M9ew&_nc_ht=scontent.fhan2-4.fna&oh=00_AfAdejbqLZ4NB-pbxBKDON4oczCWe7E09_0h0kf9dmx5Ww&oe=65382364" />
+                    </div>
+                </div>
+                <div class="avatar">
+                    <div class="w-10">
+                        <img
+                            src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/355911512_1499391710869593_8577894831743026955_n.jpg?stp=c62.0.240.240a_dst-jpg_p240x240&_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=6oh5vk9CFXEAX92M9ew&_nc_ht=scontent.fhan2-4.fna&oh=00_AfAdejbqLZ4NB-pbxBKDON4oczCWe7E09_0h0kf9dmx5Ww&oe=65382364" />
+                    </div>
+                </div>
+                <div class="avatar">
+                    <div class="w-10">
+                        <img
+                            src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/355911512_1499391710869593_8577894831743026955_n.jpg?stp=c62.0.240.240a_dst-jpg_p240x240&_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=6oh5vk9CFXEAX92M9ew&_nc_ht=scontent.fhan2-4.fna&oh=00_AfAdejbqLZ4NB-pbxBKDON4oczCWe7E09_0h0kf9dmx5Ww&oe=65382364" />
+                    </div>
+                </div>
+                <div class="avatar placeholder relative hover:cursor-pointer">
+                    <div class="w-10 bg-neutral-focus text-neutral-content">
+                        <span><i class="fa-solid fa-ellipsis"></i></span>
+                    </div>
+                </div>
+                <div class="absolute top-0 h-[400px] max-w-md rounded-lg border border-red-600 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800 sm:p-8"
+                    style=" max-height: 400px; overflow-y: auto;">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Latest Customers</h3>
+                        <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
+                            View all
+                        </a>
+                    </div>
+                    <div class="flow-root">
+                        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                                            alt="Neil image">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            Neil Sims
+                                        </p>
+                                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            email@windster.com
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                        $320
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+                                            alt="Bonnie image">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            Bonnie Green
+                                        </p>
+                                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            email@windster.com
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                        $3467
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                                            alt="Michael image">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            Michael Gough
+                                        </p>
+                                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            email@windster.com
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                        $67
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://flowbite.com/docs/images/people/profile-picture-4.jpg"
+                                            alt="Lana image">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            Lana Byrd
+                                        </p>
+                                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            email@windster.com
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                        $367
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-0 pt-3 sm:pt-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full"
+                                            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                                            alt="Thomas image">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            Thomes Lean
+                                        </p>
+                                        <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            email@windster.com
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                        $2367
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
 
