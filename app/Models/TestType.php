@@ -12,5 +12,6 @@ class TestType extends Model
 
     protected $fillable = [
         'typeName',
+        'projectID'
     ];
 }
