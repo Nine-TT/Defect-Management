@@ -87,6 +87,12 @@
             <h2 class="">Tên dự án: {{ $project->projectName }}</h2>
             <p>Mô tả: {{ $project->description }}</p>
         </div>
+
+
+
+
+
+
     </main>
 
     <script src="{{ Vite::asset('resources/js/toastify.js') }}"></script>

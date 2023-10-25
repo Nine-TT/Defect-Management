@@ -9,7 +9,6 @@ use App\Http\Controllers\project\ProjectMemberController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
 
-
 //------------ project route -----------
 Route::middleware('auth')->group(function () {
     Route::get('/projects', [ProjectControllers::class, 'index'])->name('projects.index');
@@ -19,10 +18,13 @@ Route::middleware('auth')->group(function () {
     // ------------------------------------
 
 
+
     Route::middleware('checkProjectMembership')->group(function () {
         Route::get('/projects/{projectID}', [ProjectControllers::class, 'show'])->name('projects.show');
         Route::delete('/projects/{projectID}', [ProjectControllers::class, 'destroy'])->name('projects.destroy');
-        Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'managementUserInProject'])->name('projects.member');
+        Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'index'])->name('projects.member');
+        Route::delete('/projects/{projectID}/users', [ProjectMemberController::class, 'deleteUser'])->name('handelDeleteUser.projectMember');
+        Route::patch('/projects/{projectID}/users', [ProjectMemberController::class, 'handleChangeRole'])->name('handleChangeRole.projectMember');
     });
 });
 
