@@ -52,7 +52,7 @@
                 </div>
                 <div>
                     <label for="firstName" class="block text-sm font-medium text-gray-900">Tên</label>
-                    <input type="text" name "firstName" id="firstName" value="{{$user->firstName}}"
+                    <input type="text" name="firstName" id="firstName" value="{{$user->firstName}}"
                     class="input input-bordered w-full"
                     placeholder="Nhập tên của bạn" required>
                 </div>
