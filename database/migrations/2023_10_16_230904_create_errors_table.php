@@ -13,11 +13,11 @@ class CreateErrorsTable extends Migration
             $table->string('errorName'); // Tên của lỗi
             $table->text('description'); // Mô tả chi tiết về lỗi
             $table->string('status'); // Trạng thái của lỗi (Error, Pending, Tested, Closed)
-            $table->unsignedBigInteger('assignedTo'); // Người được giao xử lý lỗi (khóa ngoại)
-            $table->datetime('estimateTime'); // Thời gian dự kiến hoàn thành sửa lỗi
-            $table->unsignedBigInteger('reporter'); // Người báo cáo lỗi (khóa ngoại)
-            $table->unsignedBigInteger('testTypeID'); // Loại kiểm thử của lỗi (khóa ngoại)
-            $table->unsignedBigInteger('errorTypeID'); // Loại lỗi (khóa ngoại)
+            $table->unsignedBigInteger('assignedTo')->nullable(); // Người được giao xử lý lỗi (khóa ngoại)
+            $table->datetime('estimateTime')->nullable(); // Thời gian dự kiến hoàn thành sửa lỗi
+            $table->unsignedBigInteger('reporter')->nullable(); // Người báo cáo lỗi (khóa ngoại)
+            $table->unsignedBigInteger('testTypeID')->nullable(); // Loại kiểm thử của lỗi (khóa ngoại)
+            $table->unsignedBigInteger('errorTypeID')->nullable(); // Loại lỗi (khóa ngoại)
             $table->text('stepsToReproduce'); // Bước để tái tạo lỗi
             $table->text('expectedResult'); // Kết quả mong đợi sau khi sửa lỗi
             $table->text('actualResult'); // Kết quả thực tế sau khi kiểm tra lỗi
