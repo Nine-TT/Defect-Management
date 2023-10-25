@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Error\ErrorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\project\ProjectControllers;
@@ -24,6 +25,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'managementUserInProject'])->name('projects.member');
     });
 });
+
+//-----------------Errors route-----------------------
+Route::middleware(['auth','checkProjectMembership'])->group(function () {
+    route::get('/projects/{projectID}/errors',[ErrorController::class,'index'])->name('error.index');
+    route::post('/projects/{projectID}/errors',[ErrorController::class,'store'])->name('error.store');
+    route::patch('/projects/{projectID}/errors',[ErrorController::class,'update'])->name('error.update');
+});
+
+
 
 
 Route::get('/dashboard', function () {
