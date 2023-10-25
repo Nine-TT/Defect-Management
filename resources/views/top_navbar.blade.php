@@ -114,13 +114,10 @@
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95" role="menu"
                              aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                             <form method="GET" action="{{ route('profile.edit') }}">
-                                 @csrf
-                                 <a href="#" :href="route('profile.edit')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                 <a  href="{{route('profile.edit')}}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem" tabindex="-1" id="user-menu-item-1">Thông tin cá nhân</a>
-                             </form>
+
 
                              <form method="POST" action="{{ route('logout') }}">
                                  @csrf
