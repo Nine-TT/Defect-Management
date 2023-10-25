@@ -73,7 +73,7 @@ class ProjectMemberController extends Controller
         Mail::send($mail);
 
 
-        return redirect()->route('projects.show', ['id' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
+        return redirect()->route('projects.show', ['projectID' => $projectID, 'user' => $user])->with('success', 'Thêm thành viên thành công!');
     }
 
     public function managementUserInProject($projectID)
