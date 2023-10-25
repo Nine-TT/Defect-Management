@@ -101,7 +101,7 @@
                              </div>
 
                              <div class="ml-4 flex flex-col">
-                                 <span>{{ $user->lastName??""." ".$user->firstName??""}}</span>
+                                 <span>{{ $user->lastName??""}} {{$user->firstName??""}}</span>
                              </div>
                          </div>
 
@@ -120,7 +120,7 @@
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem" tabindex="-1" id="user-menu-item-1">Thông tin cá nhân</a>
-                             </form
+                             </form>
 
                              <form method="POST" action="{{ route('logout') }}">
                                  @csrf
@@ -128,7 +128,7 @@
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem" tabindex="-1" id="user-menu-item-1">Đăng xuất</a>
-                             </form
+                             </form>
 
                          </div>
                      </div>

@@ -26,4 +26,14 @@ class Project extends Model
     {
         return $this->hasMany(ProjectMember::class, 'projectID', 'projectID');
     }
+
+    public function testTypes()
+    {
+        return $this->hasMany(TestType::class, 'projectID', 'projectID');
+    }
+
+    public function errorTypes()
+    {
+        return $this->hasMany(ErrorType::class, 'projectID', 'projectID');
+    }
 }

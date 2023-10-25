@@ -11,6 +11,8 @@ class CreateErrorTypesTable extends Migration
         Schema::create('errorTypes', function (Blueprint $table) {
             $table->id('errorTypeID');
             $table->string('typeName');
+            $table->unsignedBigInteger('projectID');
+            $table->foreign('projectID')->references('projectID')->on('projects'); // Khóa ngoại đến bảng projects
             $table->timestamps();
         });
     }

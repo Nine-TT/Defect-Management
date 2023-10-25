@@ -9,5 +9,6 @@ class ErrorType extends Model
 
     protected $fillable = [
         'typeName',
+        'projectID',
     ];
 }

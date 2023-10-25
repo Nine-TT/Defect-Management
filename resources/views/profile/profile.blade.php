@@ -29,7 +29,7 @@
         <img id="avatar" class="w-32 h-32 rounded-full mx-auto" src="{{ asset('storage/'.$user->urlImage) }}"
              alt="Profile picture">
         @else
-        <img class="w-32 h-32 rounded-full mx-auto" src="https://fastcharger.info/images/avatar-placeholder.png"
+        <img  id="avatar" class="w-32 h-32 rounded-full mx-auto" src="https://fastcharger.info/images/avatar-placeholder.png"
              alt="Profile picture">
         @endif
         <h2 class="text-center text-2xl font-semibold mt-3">{{$user->lastName." ".$user->firstName}}</h2>

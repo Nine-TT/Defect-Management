@@ -10,6 +10,8 @@ class CreateTestTypesTable extends Migration
         Schema::create('testTypes', function (Blueprint $table) {
             $table->id('testTypeID');
             $table->string('typeName');
+            $table->unsignedBigInteger('projectID');
+            $table->foreign('projectID')->references('projectID')->on('projects'); // Khóa ngoại đến bảng projects
             $table->timestamps();
         });
     }
