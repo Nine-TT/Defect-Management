@@ -30,8 +30,8 @@ class ProfileController extends Controller
 
 
         $request->user()->fill($request->validated());
-        if($request->imageInput){
-            if(Auth::user()->urlImage){
+        if ($request->imageInput) {
+            if (Auth::user()->urlImage) {
                 Storage::disk('public')->delete($request->user()->urlImage);
             }
             $path = $request->imageInput->store('images', 'public');
