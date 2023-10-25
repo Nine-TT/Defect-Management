@@ -17,7 +17,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile', [
+        return view('profile.profile', [
             'user' => $request->user(),
         ]);
     }
@@ -31,7 +31,9 @@ class ProfileController extends Controller
 
         $request->user()->fill($request->validated());
         if($request->imageInput){
-            Storage::disk('public')->delete($request->user()->urlImage);
+            if(Auth::user()->urlImage){
+                Storage::disk('public')->delete($request->user()->urlImage);
+            }
             $path = $request->imageInput->store('images', 'public');
             $request->user()->urlImage = $path;
         }
