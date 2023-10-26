@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,6 @@ class CreateCommentsTable extends Migration
             $table->unsignedBigInteger('errorID');
             $table->unsignedBigInteger('userID');
             $table->text('content');
-            $table->datetime('createdAt');
             $table->string('type');
             $table->timestamps();
 

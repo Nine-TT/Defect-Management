@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,10 +14,9 @@ class Comment extends Model
         'errorID',
         'userID',
         'content',
-        'createdAt',
         'type',
     ];
-    
+
     public $timestamps = true;
 
     public function error()
@@ -28,6 +28,4 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'userID', 'userID');
     }
-
 }
-

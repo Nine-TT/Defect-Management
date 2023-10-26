@@ -38,6 +38,7 @@ Route::middleware(['auth', 'checkProjectMembership'])->group(function () {
     route::get('/projects/{projectID}/errors', [ErrorController::class, 'index'])->name('error.index');
     route::post('/projects/{projectID}/errors', [ErrorController::class, 'store'])->name('error.store');
     route::patch('/projects/{projectID}/errors', [ErrorController::class, 'update'])->name('error.update');
+    route::post('/projects/{projectID}/errors/comment', [ErrorController::class, 'sendComment'])->name('error.sendComment');
 });
 
 

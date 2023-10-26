@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Error;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendMail;
+use App\Models\Comment;
 use App\Models\Error;
 use App\Models\ImageError;
 use App\Models\Project;
@@ -22,14 +23,14 @@ class ErrorController extends Controller
     public function index(Request $request,): View
     {
         $user = Auth::user();
-        $detailsError=null;
+        $detailsError = null;
         $errorID = $request->input('error_id');
         $projectID = $request->route('projectID');
-        $allErrorsInProject = Error::where('projectID',$projectID)->get();
-        $project = Project::where('projectID',$projectID)->first();
-        $role = ProjectMember::where('projectID',$projectID)->where('userID',$user->userID)->first()->role;
-        if($errorID){
-            $detailsError=Error::find($errorID);
+        $allErrorsInProject = Error::where('projectID', $projectID)->get();
+        $project = Project::where('projectID', $projectID)->first();
+        $role = ProjectMember::where('projectID', $projectID)->where('userID', $user->userID)->first()->role;
+        if ($errorID) {
+            $detailsError = Error::find($errorID);
         }
         $listError = [];
         $listPending = [];
@@ -37,8 +38,8 @@ class ErrorController extends Controller
         $listClosed = [];
         $listCancel = [];
 
-        foreach($allErrorsInProject as $error){
-            switch ($error->status){
+        foreach ($allErrorsInProject as $error) {
+            switch ($error->status) {
                 case "ERROR":
                     array_push($listError, $error);
                     break;
@@ -59,17 +60,17 @@ class ErrorController extends Controller
             }
         }
 
-        return view('error.error',[
-            'user'=>$user,
-            'project'=>$project,
-            'projectID'=>$projectID,
-            'listError'=>$listError,
-            'listPending'=>$listPending,
-            'listTested'=>$listTested,
-            'listClosed'=>$listClosed,
-            'listCancel'=>$listCancel,
-            'detailsError'=>$detailsError,
-            'role'=>$role,
+        return view('error.error', [
+            'user' => $user,
+            'project' => $project,
+            'projectID' => $projectID,
+            'listError' => $listError,
+            'listPending' => $listPending,
+            'listTested' => $listTested,
+            'listClosed' => $listClosed,
+            'listCancel' => $listCancel,
+            'detailsError' => $detailsError,
+            'role' => $role,
         ]);
     }
 
@@ -123,13 +124,13 @@ class ErrorController extends Controller
                 foreach ($files as $file) {
                     $path = $file->store('images', 'public');
                     $imageError = new ImageError();
-                    $imageError->imagePath=$path;
-                    $imageError->errorID=$error->errorID;
+                    $imageError->imagePath = $path;
+                    $imageError->errorID = $error->errorID;
                     $imageError->save();
                 }
             }
 
-            if($error->assignedTo){
+            if ($error->assignedTo) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -141,7 +142,7 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->assignedToUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-            if($error->reporter){
+            if ($error->reporter) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -208,5 +209,22 @@ class ErrorController extends Controller
         $listTaskReporter = Error::where('reporter', $userID)->get();
 
         return view('task/task', ['user' => $user, 'listTaskAssignedTo' => $listTaskAssignedTo, 'listTaskReporter' => $listTaskReporter]);
+    }
+
+    public function sendComment(Request  $request)
+    {
+        $content = $request->input('comment');
+        $errorID = $request->input('error_id');
+        $userID = Auth::user()->userID;
+
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->errorID = $errorID;
+        $comment->userID = $userID;
+        $comment->type = 'text';
+        $comment->save();
+
+
+        return redirect()->back()->with('success', 'Comment thành công!');
     }
 }
