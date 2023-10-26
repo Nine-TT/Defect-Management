@@ -5,15 +5,13 @@ namespace App\Http\Controllers\Error;
 use App\Http\Controllers\Controller;
 use App\Mail\SendMail;
 use App\Models\Error;
+use App\Models\ImageError;
 use App\Models\Project;
 use App\Models\ProjectMember;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ErrorController extends Controller
@@ -24,13 +22,14 @@ class ErrorController extends Controller
     public function index(Request $request,): View
     {
         $user = Auth::user();
-        $detailsError = null;
+        $detailsError=null;
         $errorID = $request->input('error_id');
         $projectID = $request->route('projectID');
-        $allErrorsInProject = Error::where('projectID', $projectID)->get();
-        $project = Project::where('projectID', $projectID)->first();
-        if ($errorID) {
-            $detailsError = Error::find($errorID);
+        $allErrorsInProject = Error::where('projectID',$projectID)->get();
+        $project = Project::where('projectID',$projectID)->first();
+        $role = ProjectMember::where('projectID',$projectID)->where('userID',$user->userID)->first()->role;
+        if($errorID){
+            $detailsError=Error::find($errorID);
         }
         $listError = [];
         $listPending = [];
@@ -38,8 +37,8 @@ class ErrorController extends Controller
         $listClosed = [];
         $listCancel = [];
 
-        foreach ($allErrorsInProject as $error) {
-            switch ($error->status) {
+        foreach($allErrorsInProject as $error){
+            switch ($error->status){
                 case "ERROR":
                     array_push($listError, $error);
                     break;
@@ -60,16 +59,17 @@ class ErrorController extends Controller
             }
         }
 
-        return view('error.error', [
-            'user' => $user,
-            'project' => $project,
-            'projectID' => $projectID,
-            'listError' => $listError,
-            'listPending' => $listPending,
-            'listTested' => $listTested,
-            'listClosed' => $listClosed,
-            'listCancel' => $listCancel,
-            'detailsError' => $detailsError,
+        return view('error.error',[
+            'user'=>$user,
+            'project'=>$project,
+            'projectID'=>$projectID,
+            'listError'=>$listError,
+            'listPending'=>$listPending,
+            'listTested'=>$listTested,
+            'listClosed'=>$listClosed,
+            'listCancel'=>$listCancel,
+            'detailsError'=>$detailsError,
+            'role'=>$role,
         ]);
     }
 
@@ -118,7 +118,18 @@ class ErrorController extends Controller
 
             $error->save();
 
-            if ($error->assignedTo) {
+            if ($request->hasFile('files')) {
+                $files = $request->file('files');
+                foreach ($files as $file) {
+                    $path = $file->store('images', 'public');
+                    $imageError = new ImageError();
+                    $imageError->imagePath=$path;
+                    $imageError->errorID=$error->errorID;
+                    $imageError->save();
+                }
+            }
+
+            if($error->assignedTo){
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -130,9 +141,7 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->assignedToUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-
-
-            if ($error->reporter) {
+            if($error->reporter){
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -144,10 +153,7 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->reporterUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-
-
             DB::commit(); // Kết thúc giao dịch, lưu các thay đổi vào cơ sở dữ liệu
-
             return redirect()->back()->with('success', 'Dự án đã được tạo thành công');
         } catch (\Exception $e) {
             DB::rollBack(); // Quay trở lại trạng thái trước giao dịch nếu có lỗi

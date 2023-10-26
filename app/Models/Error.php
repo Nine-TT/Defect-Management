@@ -70,6 +70,6 @@ class Error extends Model
     // Định nghĩa quan hệ với bảng errors_image
     public function images()
     {
-        return $this->hasMany(ErrorImage::class, 'errorID', 'errorID');
+        return $this->hasMany(ImageError::class, 'errorID', 'errorID');
     }
 }

@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <main class="mb-auto flex-grow bg-[#f3f3f9]">
+    <main class="mb-auto flex-grow relative bg-[#f3f3f9]">
         <div class="border-b border-gray-300 bg-white py-2 pl-6 text-xl font-bold shadow-sm">
             Quản lý task
             <div class="breadcrumbs text-sm">
@@ -23,7 +23,7 @@
                 <form method="dialog">
                     <button class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">✕</button>
                 </form>
-                <form action="{{ route('error.store',['projectID'=>$projectID])}}" method="POST">
+                <form action="{{ route('error.store',['projectID'=>$projectID])}}" enctype="multipart/form-data" method="POST">
                     @csrf
                     <!--                    ------------------------body-------------------------->
                     <input value="{{$projectID}}" name="projectID" hidden>
@@ -116,7 +116,7 @@
                                 <label class="label">
                                     <span class="label-text">Thời gian hoàn thành</span>
                                 </label>
-                                <input type="text" name="estimateTime" placeholder="Chọn ngày và giờ"
+                                <input type="datetime-local" name="estimateTime" placeholder="Chọn ngày và giờ"
                                        class="border rounded p-2 z-100">
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                                             đây</p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG </p>
                                     </div>
-                                    <input id="dropzone-file" name="files" type="file" accept="image/*" class="hidden"
+                                    <input id="dropzone-file" name="files[]" type="file" accept="image/*" class="hidden"
                                            multiple/>
                                 </label>
                             </div>
@@ -251,28 +251,173 @@
         </div>
 
 
-
-
     </div>
     @if($detailsError)
     <div class="bg-opacity-10 w-full h-full absolute bg-gray-500 top-0 backdrop-blur-[1px]">
         <div class="w-full h-full flex items-center justify-center">
-            <div class="w-[500px] h-[500px] bg-white z-50 relative">
-                <a class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl" href="{{ route('error.index',['projectID'=>$projectID])}}">&times;</a>
+            <div class="w-[800px] p-10 rounded-[20px] h-[620px] bg-white z-50 relative">
+                <a class="absolute top-5 right-5 text-gray-500 hover:text-red-500 text-4xl" href="{{ route('error.index',['projectID'=>$projectID])}}">&times;</a>
 
                 <!-- Phần Title -->
                 <div class="mb-4">
                     <h1 class="text-2xl font-semibold">{{$detailsError->errorName}}</h1>
                 </div>
                 <!-- Phần Body -->
-                <div class="mb-6">
-                    43333333333333333333333333333333333
+                <div class="mb-6 w-full overflow-auto ">
+
+                    <form action="{{ route('error.store',['projectID'=>$projectID])}}" enctype="multipart/form-data" method="POST">
+                        @csrf
+                        <!--                    ------------------------body-------------------------->
+                        <input value="{{$projectID}}" name="projectID" hidden>
+                        <div class="h-[460px] pr-2   overflow-auto">
+                            <div class="group relative z-0 mb-3 mt-3 w-full">
+                                <input @if($role=='Developer') readonly @endif type="text" name="errorName" id="errorName" value="{{$detailsError->errorName}}"
+                                       class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                       placeholder=" " required/>
+                                <label for="errorName"
+                                       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">Tên
+                                    lỗi</label>
+                            </div>
+
+                            <div class="group relative z-0 mb-6 w-full">
+                            <textarea name="description" id="description" @if($role=='Developer') readonly @endif
+                                      class="peer block h-28 w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                      placeholder=" " required readonly>{{$detailsError->description}}</textarea>
+                                <label for="description"
+                                       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">Mô
+                                    tả lỗi</label>
+                            </div>
+
+
+                            <div class="group relative z-0 mb-6 w-full flex flex-row">
+                                <div class="form-control w-full max-w-xs ">
+                                    <label class="label">
+                                        <span class="label-text">Người xử lý</span>
+                                    </label>
+                                    <select class="select select-bordered w-[440px]" name="assignedTo">
+                                        @foreach($project->members as $option)
+                                        <option value="{{ $option->user->userID }}"  @if ($option->user->userID === $detailsError->assignedTo) selected @endif >
+                                            <div>{{ $option->user->lastName." ".$option->user->firstName }}</div>
+                                            <div> - {{ $option->user->email}}</div>
+                                            <div> - {{ $option->role}}</div>
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="group relative z-0 mb-6 w-full flex flex-row">
+                                <div class="form-control w-full  max-w-xs">
+                                    <label class="label">
+                                        <span class="label-text">Báo cáo cho</span>
+                                    </label>
+                                    <select class="select select-bordered w-[440px]" name="reporter">
+                                        <option disabled selected>---Chọn---</option>
+                                        @foreach($project->members as $option)
+                                        <option value="{{ $option->user->userID }}" @if ($option->user->userID === $detailsError->reporter) selected @endif>
+                                            <div>{{ $option->user->lastName." ".$option->user->firstName }}</div>
+                                            <div class="text-red-200 "> - {{ $option->user->email}}</div>
+                                            <div class="text-red-200 "> - {{ $option->role}}</div>
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="group relative z-0 mb-6 w-full flex flex-row">
+                                <div class="form-control w-full max-w-xs mr-2">
+                                    <label class="label">
+                                        <span class="label-text">Loại kiểm thử</span>
+                                    </label>
+                                    <select class="select select-bordered" name="testTypeID">
+                                        <option disabled selected>---Chọn---</option>
+                                        @foreach($project->testTypes as $option)
+                                        <option value="{{ $option->testTypeID }}" @if ($option->testTypeID === $detailsError->testTypeID) selected @endif>
+                                            {{ $option->typeName }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-control w-full max-w-xs ml-2">
+                                    <label class="label">
+                                        <span class="label-text">Loại lỗi</span>
+                                    </label>
+                                    <select class="select select-bordered" name="errorTypeID">
+                                        <option disabled selected>---Chọn---</option>
+                                        @foreach($project->errorTypes as $option)
+                                        <option value="{{ $option->errorTypeID }}" @if ($option->errorTypeID === $detailsError->errorTypeID) selected @endif>
+                                            {{ $option->typeName }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="group relative z-0 mb-6 w-full">
+                                <div class="form-control w-full w-full">
+                                    <label class="label">
+                                        <span class="label-text">Thời gian hoàn thành</span>
+                                    </label>
+                                    <input   value="{{$detailsError->estimateTime}}" type="datetime-local" name="estimateTime" placeholder="Chọn ngày và giờ"
+                                           class="border rounded p-2 z-100" value="{{$detailsError->errorName}}>
+                                </div>
+                            </div>
+
+
+                            <div class="group relative z-0 mb-6 w-full">
+                                <div class="form-control w-full w-full">
+                                    <label class="label">
+                                        <span class="label-text">Mức độ ưu tiên</span>
+                                    </label>
+                                    <select class="select select-bordered" name="priority">
+                                        <option value="4" @if ($option->priority === $detailsError->priority) selected @endif>Nghiêm trọng</option>
+                                        <option value="3" @if ($option->priority === $detailsError->priority) selected @endif>Cao</option>
+                                        <option value="2" @if ($option->priority === $detailsError->priority) selected @endif>Trung bình</option>
+                                        <option value="1" @if ($option->priority === $detailsError->priority) selected @endif>Thấp</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="group relative z-0 mt-4 mb-6 w-full">
+                            <textarea name="stepsToReproduce" id="stepsToReproduce" @if($role=='Developer') readonly @endif
+                                      class="peer block h-16 w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                      placeholder=" " required>{{$detailsError->stepsToReproduce}}</textarea>
+                                <label for="description"
+                                       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">
+                                    Các bước mô tả lỗi</label>
+                            </div>
+
+                            <div class="group relative z-0 mb-6 w-full">
+                            <textarea name="expectedResult" id="expectedResult" @if($role=='Developer') readonly @endif
+                                      class="peer block h-16 w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                      placeholder=" " required>{{$detailsError->expectedResult}}</textarea>
+                                <label for="description"
+                                       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">
+                                    Kết quả mong đợi</label>
+                            </div>
+
+                            <div class="group relative z-0 mb-6 w-full">
+                            <textarea name="actualResult" id="actualResult" @if($role=='Developer') readonly @endif
+                                      class="peer block h-16 w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
+                                      placeholder=" " required>{{$detailsError->actualResult}}</textarea>
+                                <label for="description"
+                                       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500">
+                                    Kết quả thực tế</label>
+                            </div>
+
+                                @foreach($detailsError->images as $image)
+                                <img class="mx-auto h-[40px] w-auto " src="{{ asset('storage/' . $image->imagePath) }}"
+                                     alt="Profile picture">
+                                @endforeach
+                        </div>
                     <!-- Đây là nội dung body của bạn -->
                 </div>
                 <!-- Phần Footer -->
-                <div class="flex justify-end">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md">Save</button>
-                    <button class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md" onclick="closeModal()">Cancel</button>
+                <div class="flex justify-end p-4">
+                    <input type="submit" class="px-4 cursor-pointer py-2 bg-blue-500 text-white rounded-md" value="Cập nhật">
+                    <a class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md" href="{{ route('error.index',['projectID'=>$projectID])}}" >Hủy</a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -284,8 +429,6 @@
 </main>
 
 <script src="{{ Vite::asset('resources/js/toastify.js') }}"></script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     // Initialize the datetime picker
@@ -294,7 +437,6 @@
         dateFormat: "Y-m-d H:i",
         appendTo: document.getElementById('modalAddError')
     });
-
 
 
     document.addEventListener('DOMContentLoaded', function () {
