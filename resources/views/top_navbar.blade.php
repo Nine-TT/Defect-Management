@@ -29,18 +29,14 @@
              <div class="flex items-center pl-6">
                  <div class="flex-shrink-0 md:hidden">
 
-                     <a href="#" class="group flex items-center space-x-2 text-white">
+                     <a href="/" class="group flex items-center space-x-2 text-white">
                          <div>
-                             <svg class="h-8 w-8 transition-transform duration-300 group-hover:-rotate-45"
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                     d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                             </svg>
+                             <img class="h-8 w-8 transition-transform duration-300 group-hover:-rotate-45" fill="none"
+                                  viewBox="0 0 24 24" stroke="currentColor" src="https://f85ec2983f.imgdist.com/public/users/Integrators/BeeProAgency/1078917_1064219/logo_phenikaa_bugs_master.png">
                          </div>
 
                          <div>
-                             <span class="text-2xl font-extrabold">FARNOUS</span>
-                             <span class="block text-xs">Project Managment</span>
+                             <span class="block text-[15px] font-extrabold">Phenikaa Bug Master</span>
                          </div>
                      </a>
                  </div>
@@ -95,9 +91,13 @@
                              <div class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                  id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                  <span class="sr-only">Open user menu</span>
-                                 <img class="h-8 w-8 rounded-full"
-                                     src="https://assets.codepen.io/3321250/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1646800353&width=512"
-                                     alt="">
+                                 @if ($user->urlImage)
+                                 <img id="avatart" class="mx-auto h-8 w-8 rounded-full" src="{{ asset('storage/' . $user->urlImage) }}"
+                                      alt="Profile picture">
+                                 @else
+                                 <img id="avatart" class="mx-auto h-8 w-8 rounded-full"
+                                      src="https://fastcharger.info/images/avatar-placeholder.png" alt="Profile picture">
+                                 @endif
                              </div>
 
                              <div class="ml-4 flex flex-col">
@@ -114,13 +114,10 @@
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95" role="menu"
                              aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                             <form method="GET" action="{{ route('profile.edit') }}">
-                                 @csrf
-                                 <a href="#" :href="route('profile.edit')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                 <a  href="{{route('profile.edit')}}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem" tabindex="-1" id="user-menu-item-1">Thông tin cá nhân</a>
-                             </form>
+
 
                              <form method="POST" action="{{ route('logout') }}">
                                  @csrf

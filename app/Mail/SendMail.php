@@ -59,21 +59,20 @@ class SendMail extends Mailable
 
         switch ($this->type){
             case "project-invitation":
-                $view = 'Thông báo tham gia dự án';
+                $view = 'mail.project_invitation';
                 break;
             case "assign-task":
-                $view = "Thông báo việc được giao";
+                $view = "mail.assigned_reporter";
                 break;
             case "update-task":
-                $view = "[BUG] ".$this->content." thay đổi";
+                $view = "[BUG] ".$this->content["jobTitle"]." thay đổi";
                 break;
             default:
                 $subject = "Thông báo";
         }
 
-
         return new Content(
-            view: 'mail\project_invitation',
+            view: $view,
         );
     }
 
