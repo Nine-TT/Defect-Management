@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Error;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendMail;
+use App\Models\Comment;
 use App\Models\Error;
 use App\Models\ImageError;
 use App\Models\Project;
@@ -255,5 +256,22 @@ class ErrorController extends Controller
         $listTaskReporter = Error::where('reporter', $userID)->get();
 
         return view('task/task', ['user' => $user, 'listTaskAssignedTo' => $listTaskAssignedTo, 'listTaskReporter' => $listTaskReporter]);
+    }
+
+    public function sendComment(Request  $request)
+    {
+        $content = $request->input('comment');
+        $errorID = $request->input('error_id');
+        $userID = Auth::user()->userID;
+
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->errorID = $errorID;
+        $comment->userID = $userID;
+        $comment->type = 'text';
+        $comment->save();
+
+
+        return redirect()->back()->with('success', 'Comment thành công!');
     }
 }
