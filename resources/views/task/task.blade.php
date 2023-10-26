@@ -42,7 +42,7 @@
                             <h2 class="border-b border-gray-400 p-2 font-bold">{{ $task->errorName }}</h2>
                             <a
                                 href="{{ route('error.index', ['projectID' => $task->projectID]) }}?error_id={{ $task->errorID }}">
-                                <p class="h-[220px] w-full text-ellipsis bg-gray-200 p-2">
+                                <p class="h-[220px] w-full overflow-clip bg-gray-200 p-2">
                                     {{ $task->description }}
                                 </p>
                                 <div class="p-2">
