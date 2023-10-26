@@ -92,10 +92,10 @@
                                  id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                  <span class="sr-only">Open user menu</span>
                                  @if ($user->urlImage)
-                                 <img id="avatar" class="mx-auto h-8 w-8 rounded-full" src="{{ asset('storage/' . $user->urlImage) }}"
+                                 <img id="avatart" class="mx-auto h-8 w-8 rounded-full" src="{{ asset('storage/' . $user->urlImage) }}"
                                       alt="Profile picture">
                                  @else
-                                 <img id="avatar" class="mx-auto h-8 w-8 rounded-full"
+                                 <img id="avatart" class="mx-auto h-8 w-8 rounded-full"
                                       src="https://fastcharger.info/images/avatar-placeholder.png" alt="Profile picture">
                                  @endif
                              </div>
