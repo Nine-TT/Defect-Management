@@ -17,10 +17,10 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'imageInput' => 'image',
-            'lastName' => ['required','string', 'max:255'],
-            'firstName' => ['required','string', 'max:255'],
-            'birthday' => ['required','string', 'max:255'],
-            'gender' => ['required','string', 'max:255'],
+            'lastName' => ['required', 'string', 'max:255'],
+            'firstName' => ['required', 'string', 'max:255'],
+            'birthday' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore(auth()->id(), 'userID')],
         ];
     }

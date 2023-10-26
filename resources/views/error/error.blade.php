@@ -1,12 +1,18 @@
 @extends('layout')
 
 @section('content')
-<main class="mb-auto flex-grow bg-[#f3f3f9]">
-    {{$errors}}
-
-    <h1>
-        {{$projectID}}
-    </h1>
+    <main class="mb-auto flex-grow bg-[#f3f3f9]">
+        <div class="border-b border-gray-300 bg-white py-2 pl-6 text-xl font-bold shadow-sm">
+            Quản lý task
+            <div class="breadcrumbs text-sm">
+                <ul>
+                    <li><a href="/">Trang chủ</a></li>
+                    <li><a href="/projects">Dự án</a></li>
+                    <li><a href="/projects/{{ $project->projectID }}">{{ $project->projectID }}</a></li>
+                    <li>Quản lý task</li>
+                </ul>
+            </div>
+        </div>
 
 
     <div class="">
@@ -340,4 +346,3 @@
 
 </script>
 @endsection
-

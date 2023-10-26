@@ -3,11 +3,15 @@
 @section('content')
     <main class="mb-auto flex-grow bg-[#f3f3f9]">
         <div class="border-b border-gray-300 bg-white py-2 pl-6 text-xl font-bold shadow-sm">
-            <span class="mt-2 block text-xs font-normal text-gray-300">
-                <a href="/projects">Projects</a> &raquo;
-                <a href="/projects/{{ $projectID }}">{{ $projectID }}</a> &raquo;
-                <a href="#">user</a>
-            </span>
+            Quản lý thành viên
+            <div class="breadcrumbs text-sm">
+                <ul>
+                    <li><a href="/">Trang chủ</a></li>
+                    <li><a href="/projects">Dự án</a></li>
+                    <li><a href="/projects/{{ $projectID }}">{{ $projectID }}</a></li>
+                    <li>Thành viên</li>
+                </ul>
+            </div>
         </div>
 
 
@@ -38,11 +42,9 @@
                                 <span class="label-text">Vai trò</span>
                             </label>
                             <select name="role" class="select select-bordered">
-                                <option selected>Viewer</option>
                                 <option>Admin</option>
                                 <option>Developer</option>
-                                <option>Tester</option>
-                                <option>BA</option>
+                                <option selected>Tester</option>
                             </select>
                         </div>
 
@@ -55,13 +57,8 @@
         </div>
 
         <div>
-            <!-- component -->
-            {{-- <div class="my-5 flex w-[300px] items-center rounded-lg border border-gray-400" x-data="{ searchTerm: listUser: @json($listUser) }">
-                <span class="w-10 cursor-pointer text-center"><i class="fa fa-search text-gray-400"></i></span>
-                <input type="text" class="h-9 w-full rounded-lg bg-white px-1 focus:outline-none" x-model="searchTerm">
 
-            </div> --}}
-            <div class="m-5 h-[500px] overflow-hidden overflow-y-auto rounded-lg border border-gray-700 shadow-md">
+            <div class="m-5 h-[450px] overflow-hidden overflow-y-auto rounded-lg border border-gray-700 shadow-md">
                 <table class="w-full border-collapse overflow-y-auto bg-white text-left text-sm text-gray-500">
                     <thead class="bg-gray-50">
                         <tr>
@@ -132,10 +129,6 @@
                                                 </button>
                                             </form>
 
-                                            {{-- <button class="btn btn-neutral btn-sm ml-4" onclick="my_modal_1.showModal()">Thêm
-                                            thành viên</button> --}}
-
-
                                             <!-- The button to open modal -->
                                             <label for="my_modal_STT{{ $users['user']->userID }}" class="btn">
                                                 <a x-data="{ tooltip: 'Edite' }">
@@ -165,7 +158,7 @@
                                                         <div class="group relative z-0 mb-6 w-full">
                                                             <input type="text" name="user_email" id="user_email"
                                                                 class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-black dark:focus:border-blue-500"
-                                                                value="{{ $users['user']->email }}" />
+                                                                value="{{ $users['user']->email }}" readonly />
 
                                                         </div>
 
@@ -174,7 +167,7 @@
                                                                 <span class="label-text">Vai trò</span>
                                                             </label>
                                                             <select name="role" class="select select-bordered">
-                                                                @foreach (['Viewer' => 'Viewer', 'Admin' => 'Admin', 'Developer' => 'Developer', 'Tester' => 'Tester', 'BA' => 'BA'] as $value => $label)
+                                                                @foreach (['Admin' => 'Admin', 'Developer' => 'Developer', 'Tester' => 'Tester'] as $value => $label)
                                                                     <option value="{{ $value }}"
                                                                         @if ($value === $users['role']) selected @endif>
                                                                         {{ $label }}</option>

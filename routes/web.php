@@ -25,14 +25,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects/{projectID}/users', [ProjectMemberController::class, 'index'])->name('projects.member');
         Route::delete('/projects/{projectID}/users', [ProjectMemberController::class, 'deleteUser'])->name('handelDeleteUser.projectMember');
         Route::patch('/projects/{projectID}/users', [ProjectMemberController::class, 'handleChangeRole'])->name('handleChangeRole.projectMember');
+        Route::post('/projects/{projectID}/craeate-test-type', [ProjectControllers::class, 'handleCreateTestType'])->name('handleCreateTestType.projects');
+        Route::post('/projects/{projectID}/craeate-error-type', [ProjectControllers::class, 'handleCreateErrorType'])->name('handleCreateErrorType.projects');
+        Route::put('/projects/{projectID}/change-info', [ProjectControllers::class, 'handleChangeProjectInfo'])->name('handleChangeProjectInfo.projects');
     });
 });
 
 //-----------------Errors route-----------------------
-Route::middleware(['auth','checkProjectMembership'])->group(function () {
-    route::get('/projects/{projectID}/errors',[ErrorController::class,'index'])->name('error.index');
-    route::post('/projects/{projectID}/errors',[ErrorController::class,'store'])->name('error.store');
-    route::patch('/projects/{projectID}/errors',[ErrorController::class,'update'])->name('error.update');
+Route::middleware(['auth', 'checkProjectMembership'])->group(function () {
+    route::get('/projects/{projectID}/errors', [ErrorController::class, 'index'])->name('error.index');
+    route::post('/projects/{projectID}/errors', [ErrorController::class, 'store'])->name('error.store');
+    route::patch('/projects/{projectID}/errors', [ErrorController::class, 'update'])->name('error.update');
 });
 
 
