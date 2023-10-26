@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/projects/{projectID}/craeate-test-type', [ProjectControllers::class, 'handleCreateTestType'])->name('handleCreateTestType.projects');
         Route::post('/projects/{projectID}/craeate-error-type', [ProjectControllers::class, 'handleCreateErrorType'])->name('handleCreateErrorType.projects');
         Route::put('/projects/{projectID}/change-info', [ProjectControllers::class, 'handleChangeProjectInfo'])->name('handleChangeProjectInfo.projects');
+        Route::delete('/projects/{projectID}/delete-test-type', [ProjectControllers::class, 'deleteTestType'])->name('deleteTestType.projectMember');
+        Route::delete('/projects/{projectID}/delete-error-type', [ProjectControllers::class, 'deleteErrorType'])->name('deleteErrorType.projectMember');
     });
 });
 
@@ -44,6 +46,8 @@ Route::middleware(['auth', 'checkProjectMembership'])->group(function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/task', [ErrorController::class, 'taskIndex'])->name('task.index')->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
