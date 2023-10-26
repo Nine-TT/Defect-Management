@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Error;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendMail;
 use App\Models\Error;
 use App\Models\Project;
 use App\Models\ProjectMember;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -19,16 +21,17 @@ class ErrorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request,): View
     {
         $user = Auth::user();
-
-
-
+        $detailsError=null;
+        $errorID = $request->input('error_id');
         $projectID = $request->route('projectID');
         $allErrorsInProject = Error::where('projectID',$projectID)->get();
         $project = Project::where('projectID',$projectID)->first();
-
+        if($errorID){
+            $detailsError=Error::find($errorID);
+        }
         $listError = [];
         $listPending = [];
         $listTested = [];
@@ -66,6 +69,7 @@ class ErrorController extends Controller
             'listTested'=>$listTested,
             'listClosed'=>$listClosed,
             'listCancel'=>$listCancel,
+            'detailsError'=>$detailsError,
         ]);
     }
 
@@ -113,6 +117,34 @@ class ErrorController extends Controller
             $error->projectID = $request->input('projectID');
 
             $error->save();
+
+            if($error->assignedTo){
+                $content = [
+                    "projectName" => $error->project->projectName,
+                    "projectID" => $error->project->projectID,
+                    "type" => "assigned",
+                    "user" => $error->assignedToUser,
+                    "jobTitle" => $error->errorName,
+                    "jobContent" => $error->description,
+                ];
+                $mail = new SendMail($error->assignedToUser, 'assign-task', $content);
+                Mail::send($mail);
+            }
+
+
+            if($error->reporter){
+                $content = [
+                    "projectName" => $error->project->projectName,
+                    "projectID" => $error->project->projectID,
+                    "type" => "reporter",
+                    "user" => $error->reporterUser(),
+                    "jobTitle" => $error->errorName,
+                    "jobContent" => $error->description,
+                ];
+                $mail = new SendMail($error->reporterUser, 'assign-task', $content);
+                Mail::send($mail);
+            }
+
 
             DB::commit(); // Kết thúc giao dịch, lưu các thay đổi vào cơ sở dữ liệu
 
