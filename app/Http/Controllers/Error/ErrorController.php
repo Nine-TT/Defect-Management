@@ -5,15 +5,13 @@ namespace App\Http\Controllers\Error;
 use App\Http\Controllers\Controller;
 use App\Mail\SendMail;
 use App\Models\Error;
+use App\Models\ImageError;
 use App\Models\Project;
 use App\Models\ProjectMember;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ErrorController extends Controller
@@ -29,6 +27,7 @@ class ErrorController extends Controller
         $projectID = $request->route('projectID');
         $allErrorsInProject = Error::where('projectID',$projectID)->get();
         $project = Project::where('projectID',$projectID)->first();
+        $role = ProjectMember::where('projectID',$projectID)->where('userID',$user->userID)->first()->role;
         if($errorID){
             $detailsError=Error::find($errorID);
         }
@@ -70,6 +69,7 @@ class ErrorController extends Controller
             'listClosed'=>$listClosed,
             'listCancel'=>$listCancel,
             'detailsError'=>$detailsError,
+            'role'=>$role,
         ]);
     }
 
@@ -115,8 +115,18 @@ class ErrorController extends Controller
             $error->actualResult = $request->input('actualResult');
             $error->priority = $request->input('priority');
             $error->projectID = $request->input('projectID');
-
             $error->save();
+
+            if ($request->hasFile('files')) {
+                $files = $request->file('files');
+                foreach ($files as $file) {
+                    $path = $file->store('images', 'public');
+                    $imageError = new ImageError();
+                    $imageError->imagePath=$path;
+                    $imageError->errorID=$error->errorID;
+                    $imageError->save();
+                }
+            }
 
             if($error->assignedTo){
                 $content = [
@@ -130,8 +140,6 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->assignedToUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-
-
             if($error->reporter){
                 $content = [
                     "projectName" => $error->project->projectName,
@@ -144,16 +152,12 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->reporterUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-
-
             DB::commit(); // Kết thúc giao dịch, lưu các thay đổi vào cơ sở dữ liệu
-
             return redirect()->back()->with('success', 'Dự án đã được tạo thành công');
         } catch (\Exception $e) {
             DB::rollBack(); // Quay trở lại trạng thái trước giao dịch nếu có lỗi
             return redirect()->back()->with('error', $e);
         }
-
     }
 
     /**
