@@ -274,4 +274,32 @@ class ProjectControllers extends Controller
             return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+
+    public function deleteTestType(Request $request)
+    {
+        $id = $request->input('test_type_id');
+
+        $testTypes = TestType::find($id);
+
+        if ($testTypes) {
+            $testTypes->delete();
+            return redirect()->back()->with('success', 'Xoá loại kiểm thử thành công!');
+        } else {
+            return redirect()->back()->with('error', 'Xóa thất bại!');
+        }
+    }
+
+    public function deleteErrorType(Request $request)
+    {
+        $id = $request->input('error_type_id');
+
+        $errorTypes = ErrorType::find($id);
+
+        if ($errorTypes) {
+            $errorTypes->delete();
+            return redirect()->back()->with('success', 'Xoá loại lỗi thành công!');
+        } else {
+            return redirect()->back()->with('error', 'Xóa thất bại!');
+        }
+    }
 }

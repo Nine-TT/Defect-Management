@@ -115,6 +115,7 @@ class ErrorController extends Controller
             $error->actualResult = $request->input('actualResult');
             $error->priority = $request->input('priority');
             $error->projectID = $request->input('projectID');
+
             $error->save();
 
             if ($request->hasFile('files')) {
@@ -195,5 +196,17 @@ class ErrorController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function taskIndex()
+    {
+        $user = Auth::user();
+        $userID = Auth::user()->userID;
+
+        $listTaskAssignedTo = Error::where('assignedTo', $userID)->get();
+
+        $listTaskReporter = Error::where('reporter', $userID)->get();
+
+        return view('task/task', ['user' => $user, 'listTaskAssignedTo' => $listTaskAssignedTo, 'listTaskReporter' => $listTaskReporter]);
     }
 }
