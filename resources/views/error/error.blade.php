@@ -9,7 +9,7 @@
     </h1>
 
 
-    <div>
+    <div class="">
         <button class="btn btn-neutral btn-sm ml-4" onclick="modalAddError.showModal()">Thêm lỗi</button>
         <dialog id="modalAddError" class="modal ">
             <div class="modal-box ">
@@ -17,7 +17,6 @@
                 <form method="dialog">
                     <button class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">✕</button>
                 </form>
-
                 <form action="{{ route('error.store',['projectID'=>$projectID])}}" method="POST">
                     @csrf
                     <!--                    ------------------------body-------------------------->
@@ -202,131 +201,78 @@
 
     <div class="grid grid-cols-5 h-[500px]  overflow-auto">
         <div class="col-span-1 m-2">
-            <div class="grid h-full   card bg-red-200 rounded-box p-2 font-bold">
+            <div class=" h-full flex flex-col  card bg-red-200 rounded-box p-2">
                 <div class="break-normal font-bold">ERROR</div>
                 @foreach($listError as $error)
-                <div class="bg-white border rounded-lg mt-2 mb-2 relative">
-                    <!-- Title -->
-                    <div class="bg-gray-200 text-bl-500 py-2 px-4 flex justify-between items-center">
-                        <p class="text-sm font-semibold">{{$error->errorName}}</p>
-                        <!-- Nút "..." -->
-                        <div class="relative group">
-                            <div class="dropdown dropdown-end">
-                                <label tabindex="0"  class="btn bg-gray-200 font-bold border-0 ">. . .</label>
-                                <ul tabindex="0" class="dropdown-content z-[9999999999] menu shadow bg-base-100 rounded-box w-52 ">
-
-                                    @foreach(['PENDING', 'TESTED', 'CLOSED','CANCEL'] as $type)
-                                    <li p-0>
-                                        <form method="post" action="{{ route('error.update',['projectID'=>$projectID])}}" >
-                                            @csrf
-                                            @method('patch')
-                                            <input type="text" value="{{$type}}" name="status" hidden>
-                                            <input type="text" value="{{$error->errorID}}" name="errorID" hidden>
-                                            <input type="submit"  class="w-40 cursor-pointer" value="{{$type}}">
-                                        </form>
-                                    </li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Body -->
-                    <div class="p-4">
-                        <p class="text-gray-600">This is the main content of the card.</p>
-                    </div>
-                    <!-- Footer -->
-                    @if($error->assignedToUser)
-                    <div class="bg-gray-200 text-gray-700 py-2 px-4 flex justify-center items-center">
-                        <div class="tooltip" data-tip="assigned: {{$error->assignedToUser->lastName}} {{$error->assignedToUser->firstName}} ">
-                            @if($error->assignedToUser->urlImage)
-                            <img id="avatar" class="w-6 h-6 rounded-full mx-auto" src="{{ asset('storage/'.$error->assignedToUser->urlImage) }}"
-                                 alt="Profile picture">
-                            @else
-                            <img  id="avatar" class="w-6 h-6 rounded-full mx-auto" src="https://fastcharger.info/images/avatar-placeholder.png"
-                                  alt="Profile picture">
-                            @endif
-                        </div>
-                    </div>
-                    @endif
-                </div>
-
+                @include('error.error-card', ['error' => $error,'typeError'=>"ERROR"])
                 @endforeach
-
             </div>
         </div>
 
         <div class="col-span-1 m-2">
-            <div class="grid h-full  flex-grow bg-yellow-100 rounded-box p-2 border">
+            <div class="h-full flex flex-col   flex-grow bg-yellow-200 rounded-box p-2 border">
                 <div class="break-normal font-bold">PENDING</div>
-
                 @foreach($listPending as $error)
-                <div class="bg-white border rounded-lg mt-2 mb-2 relative">
-                    <!-- Title -->
-                    <div class="bg-gray-200 text-bl-500 py-2 px-4 flex justify-between items-center">
-                        <p class="text-sm font-semibold">{{$error->errorName}}</p>
-                        <!-- Nút "..." -->
-                        <div class="relative group">
-                            <div class="dropdown dropdown-end">
-                                <label tabindex="0"  class="btn bg-gray-200 font-bold border-0 ">. . .</label>
-                                <ul tabindex="0" class="dropdown-content z-[9999999999] menu shadow bg-base-100 rounded-box w-52 ">
-
-                                    @foreach(['ERROR', 'TESTED', 'CLOSED','CANCEL'] as $type)
-                                    <li p-0>
-                                        <form method="post" action="{{ route('error.update',['projectID'=>$projectID])}}" >
-                                            @csrf
-                                            @method('patch')
-                                            <input type="text" value="{{$type}}" name="status" hidden>
-                                            <input type="text" value="{{$error->errorID}}" name="errorID" hidden>
-                                            <input type="submit"  class="w-40 cursor-pointer" value="{{$type}}">
-                                        </form>
-                                    </li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Body -->
-                    <div class="p-4">
-                        <p class="text-gray-600">This is the main content of the card.</p>
-                    </div>
-                    <!-- Footer -->
-                    @if($error->assignedToUser)
-                    <div class="bg-gray-200 text-gray-700 py-2 px-4 flex justify-center items-center">
-                        <div class="tooltip" data-tip="assigned: {{$error->assignedToUser->lastName}} {{$error->assignedToUser->firstName}} ">
-                            @if($error->assignedToUser->urlImage)
-                            <img id="avatar" class="w-6 h-6 rounded-full mx-auto" src="{{ asset('storage/'.$error->assignedToUser->urlImage) }}"
-                                 alt="Profile picture">
-                            @else
-                            <img  id="avatar" class="w-6 h-6 rounded-full mx-auto" src="https://fastcharger.info/images/avatar-placeholder.png"
-                                  alt="Profile picture">
-                            @endif
-                        </div>
-                    </div>
-                    @endif
-                </div>
-
+                @include('error.error-card', ['error' => $error,'typeError'=>"PENDING"])
                 @endforeach
-
             </div>
         </div>
         <div class="col-span-1 m-2">
-            <div class="grid h-full flex-grow card bg-blue-100 bg-base-300 rounded-box p-2 border">
+            <div class="h-full flex flex-col flex-grow card bg-green-200 bg-base-300 rounded-box p-2 border">
                 <div class="break-normal font-bold">TESTED</div>
+                <div class="flex flex-col space-y-2">
+                    @foreach($listTested as $error)
+                    @include('error.error-card', ['error' => $error,'typeError'=>"TESTED"])
+                    @endforeach
+                </div>
             </div>
         </div>
         <div class="col-span-1 m-2">
-            <div class="grid h-full flex-grow card bg-base-300 rounded-box p-2 border">
+            <div class="h-full flex flex-col  flex-grow card bg-blue-200 rounded-box p-2 border">
                 <div class="break-normal font-bold">CLOSED</div>
+                @foreach($listClosed as $error)
+                @include('error.error-card', ['error' => $error,'typeError'=>"CLOSED"])
+                @endforeach
             </div>
         </div>
         <div class="col-span-1 m-2">
-            <div class="grid h-full flex-grow card bg-gray-100 rounded-box p-2 border">
+            <div class="h-full flex flex-col flex-grow card bg-gray-200 rounded-box p-2 border">
                 <div class="break-normal font-bold">CANCEL</div>
+                @foreach($listCancel as $error)
+                @include('error.error-card', ['error' => $error,'typeError'=>"CANCEL"])
+                @endforeach
+            </div>
+        </div>
+
+
+
+
+    </div>
+    @if($detailsError)
+    <div class="bg-opacity-10 w-full h-full absolute bg-gray-500 top-0 backdrop-blur-[1px]">
+        <div class="w-full h-full flex items-center justify-center">
+            <div class="w-[500px] h-[500px] bg-white z-50 relative">
+                <a class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl" href="{{ route('error.index',['projectID'=>$projectID])}}">&times;</a>
+
+                <!-- Phần Title -->
+                <div class="mb-4">
+                    <h1 class="text-2xl font-semibold">{{$detailsError->errorName}}</h1>
+                </div>
+                <!-- Phần Body -->
+                <div class="mb-6">
+                    43333333333333333333333333333333333
+                    <!-- Đây là nội dung body của bạn -->
+                </div>
+                <!-- Phần Footer -->
+                <div class="flex justify-end">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md">Save</button>
+                    <button class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md" onclick="closeModal()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
+
+    @endif
 
 
 </main>
@@ -340,11 +286,11 @@
     flatpickr('#estimateTime', {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        appendTo: document.getElementById('modalAddError') // Đảm bảo datepicker nằm trong phần tử modalAddError
+        appendTo: document.getElementById('modalAddError')
     });
-</script>
 
-<script>
+
+
     document.addEventListener('DOMContentLoaded', function () {
     @if(session('error'))showToastify('{{ session('error') }}', "red");
     @elseif(session('success'))showToastify('{{ session('success') }}', "green");
@@ -356,30 +302,22 @@
     const selectedImagesContainer = document.getElementById('selected-images');
     let selectedImages = [];
 
-    // Listen for changes in the file input
     fileInput.addEventListener('change', function () {
-        // Check if any files have been selected
         if (fileInput.files.length > 0) {
-            // Iterate over the selected files
             for (const file of fileInput.files) {
-                // Check if the selected file is an image
                 if (file.type.startsWith('image/')) {
-                    // Create a container for the image and the remove button
                     const imageContainer = document.createElement('div');
                     imageContainer.classList.add('relative');
 
-                    // Create a new image element for the selected file
                     const image = document.createElement('img');
                     image.src = URL.createObjectURL(file);
                     image.alt = 'Selected Image';
                     image.classList.add('max-h-32', 'max-w-32');
 
-                    // Create a remove button (X)
                     const removeButton = document.createElement('button');
                     removeButton.innerHTML = 'X';
                     removeButton.classList.add('absolute', 'top-0', 'right-0', 'bg-red-500', 'text-white', 'rounded-full', 'text-xs', 'w-4', 'h-4', 'flex', 'items-center', 'justify-center', 'cursor-pointer', 'hover:bg-red-600');
 
-                    // Add a click event listener to the remove button
                     removeButton.addEventListener('click', function () {
                         // Remove the selected image from the selectedImages array
                         const index = selectedImages.indexOf(file);
@@ -387,23 +325,19 @@
                             selectedImages.splice(index, 1);
                         }
 
-                        // Remove the image container from the selected images container
                         selectedImagesContainer.removeChild(imageContainer);
                     });
 
-                    // Append the image and the remove button to the image container
                     imageContainer.appendChild(image);
                     imageContainer.appendChild(removeButton);
-
-                    // Append the image container to the selected images container
                     selectedImagesContainer.appendChild(imageContainer);
-
-                    // Store the selected image in the array
                     selectedImages.push(file);
                 }
             }
         }
     });
-</script>
+
+
 </script>
 @endsection
+
