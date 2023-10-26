@@ -22,14 +22,14 @@ class ErrorController extends Controller
     public function index(Request $request,): View
     {
         $user = Auth::user();
-        $detailsError=null;
+        $detailsError = null;
         $errorID = $request->input('error_id');
         $projectID = $request->route('projectID');
-        $allErrorsInProject = Error::where('projectID',$projectID)->get();
-        $project = Project::where('projectID',$projectID)->first();
-        $role = ProjectMember::where('projectID',$projectID)->where('userID',$user->userID)->first()->role;
-        if($errorID){
-            $detailsError=Error::find($errorID);
+        $allErrorsInProject = Error::where('projectID', $projectID)->get();
+        $project = Project::where('projectID', $projectID)->first();
+        $role = ProjectMember::where('projectID', $projectID)->where('userID', $user->userID)->first()->role;
+        if ($errorID) {
+            $detailsError = Error::find($errorID);
         }
         $listError = [];
         $listPending = [];
@@ -37,8 +37,8 @@ class ErrorController extends Controller
         $listClosed = [];
         $listCancel = [];
 
-        foreach($allErrorsInProject as $error){
-            switch ($error->status){
+        foreach ($allErrorsInProject as $error) {
+            switch ($error->status) {
                 case "ERROR":
                     array_push($listError, $error);
                     break;
@@ -59,17 +59,17 @@ class ErrorController extends Controller
             }
         }
 
-        return view('error.error',[
-            'user'=>$user,
-            'project'=>$project,
-            'projectID'=>$projectID,
-            'listError'=>$listError,
-            'listPending'=>$listPending,
-            'listTested'=>$listTested,
-            'listClosed'=>$listClosed,
-            'listCancel'=>$listCancel,
-            'detailsError'=>$detailsError,
-            'role'=>$role,
+        return view('error.error', [
+            'user' => $user,
+            'project' => $project,
+            'projectID' => $projectID,
+            'listError' => $listError,
+            'listPending' => $listPending,
+            'listTested' => $listTested,
+            'listClosed' => $listClosed,
+            'listCancel' => $listCancel,
+            'detailsError' => $detailsError,
+            'role' => $role,
         ]);
     }
 
@@ -123,13 +123,13 @@ class ErrorController extends Controller
                 foreach ($files as $file) {
                     $path = $file->store('images', 'public');
                     $imageError = new ImageError();
-                    $imageError->imagePath=$path;
-                    $imageError->errorID=$error->errorID;
+                    $imageError->imagePath = $path;
+                    $imageError->errorID = $error->errorID;
                     $imageError->save();
                 }
             }
 
-            if($error->assignedTo){
+            if ($error->assignedTo) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -141,7 +141,7 @@ class ErrorController extends Controller
                 $mail = new SendMail($error->assignedToUser, 'assign-task', $content);
                 Mail::send($mail);
             }
-            if($error->reporter){
+            if ($error->reporter) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -182,11 +182,58 @@ class ErrorController extends Controller
      */
     public function update(Request $request)
     {
+        $data = $request->all();
         $error = Error::find($request->input('errorID'));
+        $error->fill($data);
+        $updatedData = [];
+        $fieldsToCheck = [
+            'errorName' => 'Tên lỗi',
+            'description' => 'Mô tả',
+            'status' => 'Trạng thái',
+            'assignedTo' => 'Lập trình viên',
+            'estimateTime' => 'Thời gian hoàn thành',
+            'reporter' => 'Kiểm thử viên',
+            'testTypeID' => 'Loại kiểm thử',
+            'errorTypeID' => 'Loại lỗi',
+            'stepsToReproduce' => 'Các bước tái hiện lỗi',
+            'expectedResult' => 'Kết quả mong muốn',
+            'actualResult' => 'Kết quả thực tế',
+            'priority' => 'Mức độ nghiêm trọng',
+        ];
+        ;
 
-        $error->status = $request->input('status');
+        foreach ($error->getDirty() as $field => $label) {
+            $updatedData[] = $fieldsToCheck[$field];
+        }
 
-        $error->save();
+
+        $emailRecipient = [];
+
+        if($error->assignedToUser->email!==Auth::user()->email){
+            $emailRecipient[] = $error->assignedToUser;
+        }
+        if($error->reporterUser->email!==Auth::user()->email){
+            $emailRecipient[] = $error->reporterUser;
+        }
+
+
+
+        if($updatedData){
+            $error->save();
+            foreach($emailRecipient as $recipient){
+                $content = [
+                    "projectName" => $error->project->projectName,
+                    "errorName" => $error->errorName,
+                    "projectID" => $error->project->projectID,
+                    "errorID" => $error->errorID,
+                    "user" => $recipient,
+                    "updater" => Auth::user(),
+                    "listUpdate" => $updatedData,
+                ];
+                $mail = new SendMail($recipient, 'update-task', $content);
+                Mail::send($mail);
+            }
+        }
         return redirect()->back();
     }
 

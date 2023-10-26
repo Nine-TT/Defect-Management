@@ -39,7 +39,7 @@ class SendMail extends Mailable
                 $subject = "Thông báo việc được giao";
                 break;
             case "update-task":
-                $subject = "[BUG] ".$this->content." thay đổi";
+                $subject = "[BUG] ".$this->content['errorName']." thay đổi";
                 break;
             default:
                 $subject = "Thông báo";
@@ -65,7 +65,7 @@ class SendMail extends Mailable
                 $view = "mail.assigned_reporter";
                 break;
             case "update-task":
-                $view = "[BUG] ".$this->content["jobTitle"]." thay đổi";
+                $view = "mail.update-task";
                 break;
             default:
                 $subject = "Thông báo";
