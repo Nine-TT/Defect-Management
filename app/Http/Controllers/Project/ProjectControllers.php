@@ -9,10 +9,34 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProjectMember;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\TestType;
+use App\Models\ErrorType;
+use Illuminate\Database\QueryException;
 
 
 class ProjectControllers extends Controller
 {
+    function getUserRoleInProject($userID, $projectID)
+    {
+        $userRole = ProjectMember::where('projectID', $projectID)
+            ->where('userID', $userID)
+            ->value('role');
+
+        return $userRole;
+    }
+
+    function getListTestType($projectID)
+    {
+        $listType = TestType::where('ProjectID', $projectID)->get();
+        return $listType;
+    }
+
+    function getListErrorType($projectID)
+    {
+        $listType = ErrorType::where('ProjectID', $projectID)->get();
+        return $listType;
+    }
+
     public function create()
     {
         return view('projects.create');
@@ -52,7 +76,7 @@ class ProjectControllers extends Controller
             ];
         }
 
-        return view('project', ['projectData' => $projectData, 'user' => $user]);
+        return view('projects/project', ['projectData' => $projectData, 'user' => $user]);
     }
 
 
@@ -62,6 +86,15 @@ class ProjectControllers extends Controller
     {
         // Lấy dự án dựa trên ID
         $project = Project::find($id);
+        $checkRoleAdmin = false;
+
+        $userRole = $this->getUserRoleInProject(Auth::user()->userID, $id);
+        if ($userRole == 'Admin') {
+            $checkRoleAdmin = true;
+        }
+
+        $listTestType = $this->getListTestType($id);
+        $listErrorType = $this->getListErrorType($id);
 
         // Kiểm tra xem dự án có tồn tại hay không
         if (!$project) {
@@ -83,19 +116,23 @@ class ProjectControllers extends Controller
 
         $user = Auth::user();
 
-        return view('project-detail', ['project' => $project, 'listUser' => $listUser, 'user' =>  $user]);
+        return view(
+            'projects/project-detail',
+            ['project' => $project, 'listUser' => $listUser, 'user' =>  $user, 'checkRoleAdmin' => $checkRoleAdmin, 'listTestType' => $listTestType, 'listErrorType' => $listErrorType]
+        );
     }
 
     public function destroy($id)
     {
         // Find the project by ID
         $project = Project::find($id);
-        $user = Auth::user();
+
 
         if (!$project) {
             return redirect()->route('projects.index')->with('error', 'Project not found');
         }
 
+        $user = Auth::user();
         $userID = $user->userID;
         // Lấy thông tin vai trò của người dùng trong dự án
         $userRole = ProjectMember::where('projectID', $id)
@@ -122,7 +159,7 @@ class ProjectControllers extends Controller
             'description' => 'required|string',
         ]);
 
-        DB::beginTransaction(); // Bắt đầu một giao dịch
+        DB::beginTransaction();
 
         try {
             $user = Auth::user();
@@ -140,13 +177,101 @@ class ProjectControllers extends Controller
             $projectMember->projectID = $project->projectID;
             $projectMember->save();
 
-            DB::commit(); // Kết thúc giao dịch, lưu các thay đổi vào cơ sở dữ liệu
+            DB::commit(); // Kết thúc , lưu các thay đổi vào cơ sở dữ liệu
 
             return redirect()->route('projects.index')->with('success', 'Dự án đã được tạo thành công');
         } catch (\Exception $e) {
-            DB::rollBack(); // Quay trở lại trạng thái trước giao dịch nếu có lỗi
+            DB::rollBack(); // Quay trở lại trạng thái trước nếu có lỗi
 
             return redirect()->back()->with('error', 'Có lỗi xảy ra khi tạo dự án');
+        }
+    }
+
+    public function handleCreateTestType(Request $request)
+    {
+        try {
+            $userID = Auth::user()->userID;
+
+            // Lấy dữ liệu từ request
+            $test_type = $request->input('test_type');
+            $projectID = $request->input('projectID');
+
+            $userRole = $this->getUserRoleInProject($userID, $projectID);
+            if ($userRole == 'Admin') {
+                // Tạo bản ghi mới trong bảng TestType
+                $testType = new TestType();
+                $testType->typeName = $test_type;
+                $testType->projectID = $projectID;
+                $testType->save();
+
+                return redirect()->back()->with('success', 'Tạo thành công loại kiểm thử!');
+            } else {
+                return redirect()->back()->with('error', 'Bạn không có quyền quản trị!');
+            }
+        } catch (QueryException $e) {
+            // Xử lý lỗi cơ sở dữ liệu
+            return redirect()->back()->with('error', 'Lỗi cơ sở dữ liệu: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Xử lý lỗi tổng quan
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    public function handleCreateErrorType(Request $request)
+    {
+        try {
+            $userID = Auth::user()->userID;
+
+            // Lấy dữ liệu từ request
+            $error_type = $request->input('error_type');
+            $projectID = $request->input('projectID');
+
+            $userRole = $this->getUserRoleInProject($userID, $projectID);
+            if ($userRole == 'Admin') {
+                // Tạo bản ghi mới trong bảng TestType
+                $errorType = new ErrorType();
+                $errorType->typeName = $error_type;
+                $errorType->projectID = $projectID;
+                $errorType->save();
+
+                return redirect()->back()->with('success', 'Tạo thành công loại lỗi!');
+            } else {
+                return redirect()->back()->with('error', 'Bạn không có quyền quản trị!');
+            }
+        } catch (QueryException $e) {
+            // Xử lý lỗi cơ sở dữ liệu
+            return redirect()->back()->with('error', 'Lỗi cơ sở dữ liệu: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Xử lý lỗi tổng quan
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    public function handleChangeProjectInfo(Request $request)
+    {
+        try {
+            $userID = Auth::user()->userID;
+
+            $projectName = $request->input('projectName');
+            $projectID = $request->input('projectID');
+            $projectDescription = $request->input('description');
+
+            $userRole = $this->getUserRoleInProject($userID, $projectID);
+
+            if ($userRole == 'Admin') {
+                $project = Project::find($projectID);
+                $project->projectName = $projectName;
+                $project->description = $projectDescription;
+                $project->save();
+
+                return redirect()->back()->with('success', 'Thông tin dự án đã được cập nhật!');
+            } else {
+                return redirect()->back()->with('error', 'Bạn không có quyền cập nhật thông tin dự án!');
+            }
+        } catch (QueryException $e) {
+            return redirect()->back()->with('error', 'Lỗi cơ sở dữ liệu: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
 }

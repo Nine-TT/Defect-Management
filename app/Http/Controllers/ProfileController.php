@@ -27,9 +27,9 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
-
         $request->user()->fill($request->validated());
+        // dd($request->imageInput);
+
         if ($request->imageInput) {
             if (Auth::user()->urlImage) {
                 Storage::disk('public')->delete($request->user()->urlImage);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectMember extends Model
 {
     protected $table = 'projectmembers';
-    protected $primaryKey = 'memberID';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'userID',
@@ -24,5 +24,4 @@ class ProjectMember extends Model
     {
         return $this->belongsTo(Project::class, 'projectID', 'projectID');
     }
-
 }
