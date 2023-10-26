@@ -13,7 +13,8 @@
          <a href="/" class="group flex items-center space-x-2 text-white hover:text-white">
              <div>
                  <img class="h-8 w-8 transition-transform duration-300 group-hover:-rotate-45" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor" src="https://f85ec2983f.imgdist.com/public/users/Integrators/BeeProAgency/1078917_1064219/logo_phenikaa_bugs_master.png">
+                     viewBox="0 0 24 24" stroke="currentColor"
+                     src="https://f85ec2983f.imgdist.com/public/users/Integrators/BeeProAgency/1078917_1064219/logo_phenikaa_bugs_master.png">
              </div>
 
              <div>
@@ -47,9 +48,8 @@
 
              <!-- ITEM -->
              <li class="text-sm text-gray-500">
-                 <a href="#"
-                     class="relative flex w-full items-center rounded px-2 py-1 hover:bg-gray-700 hover:text-white"
-                     x-on:click.prevent="selected = 'Tasks'">
+                 <a href="{{ url('/task') }}"
+                     class="{{ $currentRoute === 'task.index' ? 'bg-white text-black' : '' }}relative flex w-full items-center rounded px-2 py-1 hover:bg-gray-700 hover:text-white">
                      <div class="pr-2">
                          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

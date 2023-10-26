@@ -24,13 +24,13 @@ class ErrorController extends Controller
     public function index(Request $request,): View
     {
         $user = Auth::user();
-        $detailsError=null;
+        $detailsError = null;
         $errorID = $request->input('error_id');
         $projectID = $request->route('projectID');
-        $allErrorsInProject = Error::where('projectID',$projectID)->get();
-        $project = Project::where('projectID',$projectID)->first();
-        if($errorID){
-            $detailsError=Error::find($errorID);
+        $allErrorsInProject = Error::where('projectID', $projectID)->get();
+        $project = Project::where('projectID', $projectID)->first();
+        if ($errorID) {
+            $detailsError = Error::find($errorID);
         }
         $listError = [];
         $listPending = [];
@@ -38,8 +38,8 @@ class ErrorController extends Controller
         $listClosed = [];
         $listCancel = [];
 
-        foreach($allErrorsInProject as $error){
-            switch ($error->status){
+        foreach ($allErrorsInProject as $error) {
+            switch ($error->status) {
                 case "ERROR":
                     array_push($listError, $error);
                     break;
@@ -60,16 +60,16 @@ class ErrorController extends Controller
             }
         }
 
-        return view('error.error',[
-            'user'=>$user,
-            'project'=>$project,
-            'projectID'=>$projectID,
-            'listError'=>$listError,
-            'listPending'=>$listPending,
-            'listTested'=>$listTested,
-            'listClosed'=>$listClosed,
-            'listCancel'=>$listCancel,
-            'detailsError'=>$detailsError,
+        return view('error.error', [
+            'user' => $user,
+            'project' => $project,
+            'projectID' => $projectID,
+            'listError' => $listError,
+            'listPending' => $listPending,
+            'listTested' => $listTested,
+            'listClosed' => $listClosed,
+            'listCancel' => $listCancel,
+            'detailsError' => $detailsError,
         ]);
     }
 
@@ -118,7 +118,7 @@ class ErrorController extends Controller
 
             $error->save();
 
-            if($error->assignedTo){
+            if ($error->assignedTo) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -132,7 +132,7 @@ class ErrorController extends Controller
             }
 
 
-            if($error->reporter){
+            if ($error->reporter) {
                 $content = [
                     "projectName" => $error->project->projectName,
                     "projectID" => $error->project->projectID,
@@ -153,7 +153,6 @@ class ErrorController extends Controller
             DB::rollBack(); // Quay trở lại trạng thái trước giao dịch nếu có lỗi
             return redirect()->back()->with('error', $e);
         }
-
     }
 
     /**
@@ -191,5 +190,17 @@ class ErrorController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function taskIndex()
+    {
+        $user = Auth::user();
+        $userID = Auth::user()->userID;
+
+        $listTaskAssignedTo = Error::where('assignedTo', $userID)->get();
+
+        $listTaskReporter = Error::where('reporter', $userID)->get();
+
+        return view('task/task', ['user' => $user, 'listTaskAssignedTo' => $listTaskAssignedTo, 'listTaskReporter' => $listTaskReporter]);
     }
 }

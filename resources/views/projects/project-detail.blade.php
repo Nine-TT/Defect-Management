@@ -175,35 +175,61 @@
             </div>
             <div class="divider lg:divider-horizontal"></div>
             <div class="card rounded-box flex h-96 flex-row border border border-gray-400 bg-base-200">
-                <div class="ml-2 flex-1">
+                <div class="ml-4 flex-1">
                     <h3 class="mx-3 border-b border-gray-500 font-bold">Loại kiểm thử</h3>
                     <ul class="mt-4 max-h-80 space-y-4 overflow-y-auto text-left text-gray-500 dark:text-gray-400">
                         @foreach ($listTestType as $testType)
                             <li class="flex items-center space-x-3">
-                                <svg class="h-3.5 w-3.5 flex-shrink-0 text-green-500 dark:text-green-400"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 16 12">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
-                                </svg>
-                                <span class="text-black">{{ $testType->typeName }}</span>
+                                <div class="flex w-[300px] items-center justify-between">
+                                    <svg class="h-3.5 w-3.5 flex-shrink-0 text-green-500 dark:text-green-400"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
+                                    </svg>
+                                    <span class="text-black">{{ $testType->typeName }}</span>
+                                    <form
+                                        action="{{ route('deleteTestType.projectMember', ['projectID' => $projectID]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="text" name="test_type_id" class="hidden"
+                                            value="{{ $testType->testTypeID }}">
+                                        <button type="submit" class="hover:cursor-pointer">
+                                            <i class="fa-solid fa-trash-can text-red-400"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </li>
                         @endforeach
                     </ul>
                 </div>
                 <div class="divider lg:divider-horizontal"></div>
-                <div class="ml-2 flex-1">
+                <div class="mr-4 flex-1">
                     <h3 class="mx-3 border-b border-gray-500 font-bold">Loại kiểm thử</h3>
                     <ul class="mt-4 max-h-80 space-y-4 overflow-y-auto text-left text-gray-500 dark:text-gray-400">
                         @foreach ($listErrorType as $testType)
                             <li class="flex items-center space-x-3">
-                                <svg class="h-3.5 w-3.5 flex-shrink-0 text-green-500 dark:text-green-400"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 16 12">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
-                                </svg>
-                                <span class="text-black">{{ $testType->typeName }}</span>
+                                <div class="flex w-[300px] items-center justify-between">
+                                    <svg class="h-3.5 w-3.5 flex-shrink-0 text-green-500 dark:text-green-400"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
+                                    </svg>
+                                    <span class="text-black">{{ $testType->typeName }}</span>
+                                    <form
+                                        action="{{ route('deleteErrorType.projectMember', ['projectID' => $projectID]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="text" name="error_type_id" class="hidden"
+                                            value="{{ $testType->errorTypeID }}">
+                                        <button type="submit" class="hover:cursor-pointer">
+                                            <i class="fa-solid fa-trash-can text-red-400"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </li>
                         @endforeach
                     </ul>
