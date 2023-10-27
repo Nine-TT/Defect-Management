@@ -15,7 +15,6 @@ class CreateCommentsTable extends Migration
             $table->text('content');
             $table->string('type');
             $table->timestamps();
-
             $table->foreign('errorID')->references('errorID')->on('errors');
             $table->foreign('userID')->references('userID')->on('users');
         });
