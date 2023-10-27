@@ -183,11 +183,58 @@ class ErrorController extends Controller
      */
     public function update(Request $request)
     {
+        $data = $request->all();
         $error = Error::find($request->input('errorID'));
+        $error->fill($data);
+        $updatedData = [];
+        $fieldsToCheck = [
+            'errorName' => 'Tên lỗi',
+            'description' => 'Mô tả',
+            'status' => 'Trạng thái',
+            'assignedTo' => 'Lập trình viên',
+            'estimateTime' => 'Thời gian hoàn thành',
+            'reporter' => 'Kiểm thử viên',
+            'testTypeID' => 'Loại kiểm thử',
+            'errorTypeID' => 'Loại lỗi',
+            'stepsToReproduce' => 'Các bước tái hiện lỗi',
+            'expectedResult' => 'Kết quả mong muốn',
+            'actualResult' => 'Kết quả thực tế',
+            'priority' => 'Mức độ nghiêm trọng',
+        ];
+        ;
 
-        $error->status = $request->input('status');
+        foreach ($error->getDirty() as $field => $label) {
+            $updatedData[] = $fieldsToCheck[$field];
+        }
 
-        $error->save();
+
+        $emailRecipient = [];
+
+        if($error->assignedToUser->email!==Auth::user()->email){
+            $emailRecipient[] = $error->assignedToUser;
+        }
+        if($error->reporterUser->email!==Auth::user()->email){
+            $emailRecipient[] = $error->reporterUser;
+        }
+
+
+
+        if($updatedData){
+            $error->save();
+            foreach($emailRecipient as $recipient){
+                $content = [
+                    "projectName" => $error->project->projectName,
+                    "errorName" => $error->errorName,
+                    "projectID" => $error->project->projectID,
+                    "errorID" => $error->errorID,
+                    "user" => $recipient,
+                    "updater" => Auth::user(),
+                    "listUpdate" => $updatedData,
+                ];
+                $mail = new SendMail($recipient, 'update-task', $content);
+                Mail::send($mail);
+            }
+        }
         return redirect()->back();
     }
 
