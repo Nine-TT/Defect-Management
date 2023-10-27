@@ -426,12 +426,17 @@
                                                 Kết quả thực tế</label>
                                         </div>
 
-                                        <div class="flex flex-row flex-wrap">
+                                        <div class="flex flex-row flex-wrap bg-gray-100">
                                             @foreach ($detailsError->images as $image)
-                                                <div class="w-[200px]">
-                                                    <img class="" src="{{ asset('storage/' . $image->imagePath) }}"
-                                                        alt="Profile picture" width="100%">
-                                                </div>
+                                            <div class="m-2">
+                                                <a href="{{ asset('storage/' . $image->imagePath) }}" target="_blank">
+                                                    <div class="w-[200px]">
+                                                        <img class="" src="{{ asset('storage/' . $image->imagePath) }}"
+                                                             alt="Profile picture" width="100%">
+                                                    </div>
+                                                </a>
+                                            </div>
+
                                             @endforeach
                                         </div>
 
