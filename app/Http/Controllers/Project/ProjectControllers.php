@@ -142,10 +142,8 @@ class ProjectControllers extends Controller
         // Kiểm tra nếu người dùng có quyền "Admin" thì mới xóa dự án
         if ($userRole === 'Admin') {
             // Xóa các bản ghi liên quan trong projectMembers
+            // $project->errors()->delete();
             $project->members()->delete();
-            $project->testTypes()->delete();
-            $project->errorTypes()->delete();
-
             // Sau đó, xóa dự án
             $project->delete();
 

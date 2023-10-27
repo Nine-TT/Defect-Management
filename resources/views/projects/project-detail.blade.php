@@ -170,11 +170,19 @@
         </div>
 
         <!-- body content -->
-        <div class="mx-[auto] my-6 flex w-[96%] flex-col lg:flex-row">
-            <div class="card rounded-box grid h-96 flex-grow place-items-center border border-gray-400 bg-base-200">content
+        <div class="mx-[auto] my-6 flex min-h-[30%] w-[96%] flex-col lg:flex-row">
+            <div class="card rounded-box grid h-96 flex-grow border border-gray-400 bg-base-200">
+                <div class="h-[200px] w-full overflow-auto p-4">
+                    {{ $project->description }}
+                </div>
+                <div class="">
+                    <div class="h-[100px] w-[150px] rounded-lg border border-gray-600">
+                        <h3 class="font-bold">Số thành viên: {{ count($listUser) }}</h3>
+                    </div>
+                </div>
             </div>
             <div class="divider lg:divider-horizontal"></div>
-            <div class="card rounded-box flex h-96 flex-row border border border-gray-400 bg-base-200">
+            <div class="card rounded-box flex h-96 flex-row border border-gray-400 bg-base-200">
                 <div class="ml-4 flex-1">
                     <h3 class="mx-3 border-b border-gray-500 font-bold">Loại kiểm thử</h3>
                     <ul class="mt-4 max-h-80 space-y-4 overflow-y-auto text-left text-gray-500 dark:text-gray-400">
@@ -189,7 +197,7 @@
                                     </svg>
                                     <span class="text-black">{{ $testType->typeName }}</span>
                                     <form
-                                        action="{{ route('deleteTestType.projectMember', ['projectID' => $projectID]) }}"
+                                        action="{{ route('deleteTestType.projectMember', ['projectID' => $project->projectID]) }}"
                                         method="POST">
                                         @csrf
                                         @method('DELETE')
