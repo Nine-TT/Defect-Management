@@ -189,7 +189,7 @@
                                     </svg>
                                     <span class="text-black">{{ $testType->typeName }}</span>
                                     <form
-                                        action="{{ route('deleteTestType.projectMember', ['projectID' => $projectID]) }}"
+                                        action="{{ route('deleteTestType.projectMember', ['projectID' => $project->projectID]) }}"
                                         method="POST">
                                         @csrf
                                         @method('DELETE')
